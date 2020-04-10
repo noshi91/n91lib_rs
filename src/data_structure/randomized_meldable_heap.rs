@@ -59,7 +59,6 @@ impl<T: Ord> RandomizedMeldableHeap<T> {
                 } else {
                     &mut s.right
                 }.append2(other);
-                swap(&mut s.left, &mut s.right);
             }
         }
     }
