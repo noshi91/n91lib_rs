@@ -1,3 +1,2 @@
-mod rand;
-
-pub use self::rand::random;
+pub mod rand;
+pub mod bit;

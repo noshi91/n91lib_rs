@@ -81,7 +81,7 @@ impl<T: Ord> IntervalHeap<T> {
     }
 }
 
-fn cascade_down_start<T: Ord>(data: &mut Vec<T>) {
+fn cascade_down_start<T: Ord>(data: &mut [T]) {
     let len = data.len();
     let mut index = 0;
     loop {
@@ -110,7 +110,7 @@ fn cascade_down_start<T: Ord>(data: &mut Vec<T>) {
     }
 }
 
-fn cascade_down_end<T: Ord>(data: &mut Vec<T>) {
+fn cascade_down_end<T: Ord>(data: &mut [T]) {
     let len = data.len();
     let mut index = 1;
     loop {
@@ -136,7 +136,7 @@ fn cascade_down_end<T: Ord>(data: &mut Vec<T>) {
     }
 }
 
-fn cascade_up_start<T: Ord>(data: &mut Vec<T>, mut index: usize) {
+fn cascade_up_start<T: Ord>(data: &mut [T], mut index: usize) {
     while index != 0 {
         let parent = index / 2 - 1 & !1;
         if data[parent] <= data[index] {
@@ -147,7 +147,7 @@ fn cascade_up_start<T: Ord>(data: &mut Vec<T>, mut index: usize) {
     }
 }
 
-fn cascade_up_end<T: Ord>(data: &mut Vec<T>, mut index: usize) {
+fn cascade_up_end<T: Ord>(data: &mut [T], mut index: usize) {
     while index != 1 {
         let parent = index / 2 - 1 | 1;
         if data[parent] >= data[index] {
