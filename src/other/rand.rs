@@ -1,20 +1,19 @@
-use std::sync::atomic::{spin_loop_hint, AtomicU64, Ordering::Relaxed};
+use std::cell::Cell;
+use std::thread_local;
 
-static STATE: AtomicU64 = AtomicU64::new(91);
+thread_local!{
+    static STATE: Cell<u64> = Cell::new(91);
+}
 
 pub fn random() -> u64 {
-    loop {
-        let old = STATE.load(Relaxed);
-        let mut x = old;
+    STATE.with(|s| {
+        let mut x = s.get();
         x ^= x << 13;
         x ^= x >> 7;
         x ^= x << 17;
-        let v = STATE.compare_and_swap(old, x, Relaxed);
-        if v == old {
-            return x;
-        }
-        spin_loop_hint();
-    }
+        s.set(x);
+        x
+    })
 }
 
 use std::cmp::PartialOrd;
