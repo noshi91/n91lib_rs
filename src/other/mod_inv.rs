@@ -10,8 +10,8 @@ pub fn mod_inv_binary_gcd(m: u64, a: u64) -> Option<u64> {
     let k = m.trailing_zeros();
     let m = m >> k;
     let b_inv = {
-        let mut r = Wrapping(a);
-        let mut t = 3;
+        let mut r = Wrapping(1);
+        let mut t = 1;
         while t < k {
             r *= Wrapping(2) - (r * Wrapping(a));
             t *= 2;
