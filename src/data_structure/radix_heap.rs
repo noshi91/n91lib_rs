@@ -2,7 +2,9 @@
 
 References
 
-Ahuja, R. K., Mehlhorn, K., Orlin, J., & Tarjan, R. E. (1990). Faster algorithms for the shortest path problem. Journal of the ACM (JACM), 37(2), 213-223.
+Ahuja, R. K., Mehlhorn, K., Orlin, J., & Tarjan, R. E. (1990).
+Faster algorithms for the shortest path problem.
+Journal of the ACM (JACM), 37(2), 213-223.
 
 */
 
