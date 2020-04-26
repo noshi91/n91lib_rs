@@ -1,3 +1,11 @@
+/*
+
+References
+
+Ahuja, R. K., Mehlhorn, K., Orlin, J., & Tarjan, R. E. (1990). Faster algorithms for the shortest path problem. Journal of the ACM (JACM), 37(2), 213-223.
+
+*/
+
 use std::cmp;
 use std::mem;
 
@@ -86,7 +94,7 @@ fn test_radix_heap() {
     assert_eq!(Some((3, 1)), heap.pop());
 
     assert_eq!(Some((4, 3)), heap.pop());
-    
+
     assert_eq!(Some((4, 3)), heap.pop());
 
     assert_eq!(None, heap.pop());
