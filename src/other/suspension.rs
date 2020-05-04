@@ -35,7 +35,8 @@ impl<'a, T> Suspension<'a, T> {
             &Inner::Evaluating => panic!("cyclic calling"),
             &Inner::Evaluated(_) => return,
         }
-        let value = match mem::replace(&mut *self.0.borrow_mut(), Inner::Evaluating) {
+        let x = mem::replace(&mut *self.0.borrow_mut(), Inner::Evaluating);
+        let value = match x {
             Inner::Unevaluated(f) => f(),
             _ => unreachable!(),
         };
@@ -45,17 +46,28 @@ impl<'a, T> Suspension<'a, T> {
 
 #[test]
 fn test_suspension() {
-    let mut x = false;
+    let mut x = true;
     let f = move || {
-        if x {
-            panic!();
-        } else {
-            x = true;
-        }
+        assert!(x);
+        x = false;
         3
     };
     let susp = Suspension::new(f);
     let a = *susp.force();
     let b = *susp.force();
     assert_eq!(a, b);
+}
+
+#[test]
+#[should_panic(expected = "cyclic calling")]
+fn test_suspension_cyclic() {
+    use std::rc::Rc;
+
+    let x = Rc::new(cell::RefCell::new(Suspension::with_value(4)));
+    let y = x.clone();
+    *x.borrow_mut() = Suspension::new(move || {
+        y.borrow().force();
+        3
+    });
+    x.borrow().force();
 }
