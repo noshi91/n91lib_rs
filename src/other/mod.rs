@@ -5,3 +5,4 @@ pub mod rand;
 pub mod suspension;
 
 pub use gcd::gcd;
+pub use suspension::Suspension;

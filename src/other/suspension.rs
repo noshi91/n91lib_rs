@@ -1,20 +1,30 @@
 use std::cell;
 use std::mem;
 
-pub struct Suspension<'a, T>(cell::RefCell<Inner<'a, T>>);
+pub struct Suspension<T, F>(cell::RefCell<Inner<T, F>>)
+where
+    F: Expr<Output = T>;
 
-enum Inner<'a, T> {
-    Unevaluated(Box<dyn 'a + FnOnce() -> T>),
+enum Inner<T, F>
+where
+    F: Expr<Output = T>,
+{
+    Unevaluated(F),
     Evaluating,
     Evaluated(T),
 }
 
-impl<'a, T> Suspension<'a, T> {
-    pub fn new<F>(f: F) -> Self
-    where
-        F: 'a + FnOnce() -> T,
-    {
-        Self(cell::RefCell::new(Inner::Unevaluated(Box::new(f))))
+pub trait Expr {
+    type Output;
+    fn evaluate(self) -> Self::Output;
+}
+
+impl<T, F> Suspension<T, F>
+where
+    F: Expr<Output = T>,
+{
+    pub fn new(f: F) -> Self {
+        Self(cell::RefCell::new(Inner::Unevaluated(f)))
     }
 
     pub fn with_value(value: T) -> Self {
@@ -37,37 +47,9 @@ impl<'a, T> Suspension<'a, T> {
         }
         let x = mem::replace(&mut *self.0.borrow_mut(), Inner::Evaluating);
         let value = match x {
-            Inner::Unevaluated(f) => f(),
+            Inner::Unevaluated(f) => f.evaluate(),
             _ => unreachable!(),
         };
         *self.0.borrow_mut() = Inner::Evaluated(value);
     }
-}
-
-#[test]
-fn test_suspension() {
-    let mut x = true;
-    let f = move || {
-        assert!(x);
-        x = false;
-        3
-    };
-    let susp = Suspension::new(f);
-    let a = *susp.force();
-    let b = *susp.force();
-    assert_eq!(a, b);
-}
-
-#[test]
-#[should_panic(expected = "cyclic calling")]
-fn test_suspension_cyclic() {
-    use std::rc::Rc;
-
-    let x = Rc::new(cell::RefCell::new(Suspension::with_value(4)));
-    let y = x.clone();
-    *x.borrow_mut() = Suspension::new(move || {
-        y.borrow().force();
-        3
-    });
-    x.borrow().force();
 }
