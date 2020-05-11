@@ -1,5 +1,6 @@
 pub mod bit;
 mod dual;
+pub mod fp;
 mod gcd;
 pub mod mod_inv;
 pub mod rand;
