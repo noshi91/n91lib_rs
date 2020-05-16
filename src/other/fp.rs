@@ -4,7 +4,7 @@ use std::ops;
 
 const P: u32 = 1000000007;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Fp(pub u32);
 
 impl Fp {
