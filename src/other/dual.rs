@@ -1,38 +1,31 @@
-use alga::general;
+use crate::other::traits::Associative;
+use num_traits::Zero;
+use std::ops::Add;
 
-#[derive(PartialEq, Clone)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 pub struct Dual<T>(pub T);
 
-impl<T, O> general::AbstractMagma<O> for Dual<T>
+impl<T> Add for Dual<T>
 where
-    T: general::AbstractMagma<O>,
-    O: general::Operator,
+    T: Add<Output = T>,
 {
-    fn operate(&self, right: &Self) -> Self {
-        Self(right.0.operate(&self.0))
+    type Output = Self;
+    fn add(self, right: Self) -> Self {
+        Self(right.0 + self.0)
     }
 }
 
-impl<T, O> general::AbstractSemigroup<O> for Dual<T>
-where
-    T: general::AbstractSemigroup<O>,
-    O: general::Operator,
-{
-}
+impl<T> Associative for Dual<T> where T: Associative {}
 
-impl<T, O> general::Identity<O> for Dual<T>
+impl<T> Zero for Dual<T>
 where
-    T: general::Identity<O>,
-    O: general::Operator,
+    T: Zero,
 {
-    fn identity() -> Self {
-        Self(T::identity())
+    fn zero() -> Self {
+        Self(T::zero())
     }
-}
 
-impl<T, O> general::AbstractMonoid<O> for Dual<T>
-where
-    T: general::AbstractMonoid<O>,
-    O: general::Operator,
-{
+    fn is_zero(&self) -> bool {
+        self.0.is_zero()
+    }
 }

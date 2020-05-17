@@ -1,25 +1,20 @@
-use alga::general;
-use std::marker;
+use crate::other::traits::Monoid;
+use num_traits::zero;
+use std::clone::Clone;
 
-pub struct StackAggregation<T, O>
+pub struct StackAggregation<T>
 where
-    T: general::AbstractMonoid<O>,
-    O: general::Operator,
+    T: Monoid + Clone,
 {
     data: Vec<T>,
-    _phantom: marker::PhantomData<fn() -> O>,
 }
 
-impl<T, O> StackAggregation<T, O>
+impl<T> StackAggregation<T>
 where
-    T: general::AbstractMonoid<O>,
-    O: general::Operator,
+    T: Monoid + Clone,
 {
     pub fn new() -> Self {
-        Self {
-            data: Vec::new(),
-            _phantom: marker::PhantomData,
-        }
+        Self { data: Vec::new() }
     }
 
     pub fn is_empty(&self) -> bool {
@@ -28,7 +23,7 @@ where
 
     pub fn fold_all(&self) -> T {
         match self.data.last() {
-            None => T::identity(),
+            None => zero(),
             Some(x) => x.clone(),
         }
     }
@@ -37,7 +32,7 @@ where
         self.data.pop().is_some()
     }
 
-    pub fn push(&mut self, value: &T) {
-        self.data.push(self.fold_all().operate(value));
+    pub fn push(&mut self, value: T) {
+        self.data.push(self.fold_all() + value);
     }
 }

@@ -21,6 +21,26 @@ impl Fp {
     }
 }
 
+impl num_traits::Zero for Fp {
+    fn zero() -> Fp {
+        Fp(0)
+    }
+
+    fn is_zero(&self) -> bool {
+        *self == Self::zero()
+    }
+}
+
+impl num_traits::One for Fp {
+    fn one() -> Fp {
+        Fp(1)
+    }
+
+    fn is_one(&self) -> bool {
+        *self == Self::one()
+    }
+}
+
 macro_rules! impl_from_int {
     ($(($ty:ty: $via:ty)),*) => {
         $(
