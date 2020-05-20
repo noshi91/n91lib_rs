@@ -1,3 +1,7 @@
+use crate::other::algebraic::{
+    Annihilation, Associative, AssociativeMul, Commutative, Distributive, Invertible, Unital,
+    UnitalMul,
+};
 use std::convert::From;
 use std::iter;
 use std::ops;
@@ -156,3 +160,19 @@ impl ops::SubAssign<Fp> for Fp {
         self.0 -= rhs.0;
     }
 }
+
+impl Annihilation for Fp {}
+
+impl Associative for Fp {}
+
+impl Commutative for Fp {}
+
+impl AssociativeMul for Fp {}
+
+impl UnitalMul for Fp {}
+
+impl Unital for Fp {}
+
+impl Distributive for Fp {}
+
+impl Invertible for Fp {}

@@ -1,4 +1,4 @@
-use crate::other::traits::Associative;
+use crate::other::algebraic::{Associative, Unital};
 use num_traits::Zero;
 use std::ops::Add;
 
@@ -29,3 +29,5 @@ where
         self.0.is_zero()
     }
 }
+
+impl<T> Unital for Dual<T> where T: Unital {}

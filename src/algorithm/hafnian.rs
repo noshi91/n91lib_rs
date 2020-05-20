@@ -1,4 +1,5 @@
 use crate::other::Fp;
+use itertools::zip;
 
 pub fn hafnian(a: &Vec<Vec<Fp>>) -> Fp {
     assert_eq!(a.len() % 2, 0);
@@ -31,13 +32,13 @@ impl HafnianFn {
                 ret[i] -= zero[i];
             }
         }
-        for (b, x) in b.iter_mut().zip(&x) {
-            for (b, y) in b.iter_mut().zip(&y) {
+        for (b, x) in zip(&mut b, &x) {
+            for (b, y) in zip(b, &y) {
                 self.aa_mul_shl(b, x, y);
             }
         }
-        for (b, y) in b.iter_mut().zip(&y) {
-            for (b, x) in b.iter_mut().zip(&x) {
+        for (b, y) in zip(&mut b, &y) {
+            for (b, x) in zip(b, &x) {
                 self.aa_mul_shl(b, x, y);
             }
         }

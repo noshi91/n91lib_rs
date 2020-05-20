@@ -1,4 +1,4 @@
-use crate::other::traits::Monoid;
+use crate::other::algebraic::Monoid;
 use num_traits::zero;
 use std::clone::Clone;
 

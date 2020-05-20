@@ -1,5 +1,5 @@
+use crate::other::algebraic::Monoid;
 use crate::data_structure::StackAggregation;
-use crate::other::traits::Monoid;
 use crate::other::Dual;
 use num_traits::zero;
 use std::clone::Clone;
