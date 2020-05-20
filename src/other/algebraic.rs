@@ -1,4 +1,5 @@
 use num_traits::{One, Zero};
+use std::clone::Clone;
 use std::ops::{Add, Mul, Neg};
 
 pub trait Closed
@@ -72,11 +73,13 @@ macro_rules! trait_alias {
     };
 }
 
-trait_alias! {Magma = Closed}
+trait_alias! {Magma = Closed + Clone}
 
 trait_alias! {Semigroup = Magma + Associative}
 
-trait_alias! {Monoid = Semigroup + Unital}
+trait_alias! {UnitalMagma = Magma + Unital}
+
+trait_alias! {Monoid = Semigroup + UnitalMagma}
 
 trait_alias! {Group = Monoid + Invertible}
 

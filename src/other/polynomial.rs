@@ -1,28 +1,36 @@
-use crate::other::algebraic::{Associative, Closed, Invertible, Monoid, Semiring, Unital};
+use crate::other::algebraic::{Associative, Invertible, Monoid, Semiring, Unital, UnitalMagma};
 use itertools::{enumerate, zip};
 use num_traits::zero;
-use std::clone::Clone;
-use std::ops::{Add, Mul, Neg, Shr};
+use std::convert::From;
+use std::ops::{Add, AddAssign, Mul, Neg, Shr, Sub};
+
 #[derive(Clone)]
 pub struct Polynomial<T>
 where
-    T: Closed + Unital,
+    T: UnitalMagma,
 {
     pub coef: Vec<T>,
 }
 
 impl<T> Polynomial<T>
 where
-    T: Closed + Unital,
+    T: UnitalMagma,
 {
     pub fn new() -> Self {
         Vec::new().into()
+    }
+
+    pub fn bound(mut self, len: usize) -> Self {
+        if self.coef.len() > len {
+            self.coef.split_off(len);
+        }
+        self
     }
 }
 
 impl<T> Add for Polynomial<T>
 where
-    T: Closed + Unital + Clone,
+    T: UnitalMagma,
 {
     type Output = Self;
     fn add(mut self, mut right: Self) -> Self {
@@ -37,9 +45,25 @@ where
     }
 }
 
+impl<T> AddAssign for Polynomial<T>
+where
+    T: UnitalMagma,
+{
+    fn add_assign(&mut self, rhs: Self) {
+        let n = self.coef.len();
+        let m = rhs.coef.len();
+        if n < m {
+            self.coef.extend(vec![zero(); m - n]);
+        }
+        for (a, b) in zip(self, rhs) {
+            *a = a.clone() + b;
+        }
+    }
+}
+
 impl<T> Mul for Polynomial<T>
 where
-    T: Semiring + Clone,
+    T: Semiring,
 {
     type Output = Self;
     fn mul(self, right: Self) -> Self {
@@ -57,7 +81,7 @@ where
 
 impl<T> Neg for Polynomial<T>
 where
-    T: Closed + Unital + Invertible + Clone,
+    T: UnitalMagma + Invertible,
 {
     type Output = Self;
     fn neg(self) -> Self {
@@ -65,9 +89,19 @@ where
     }
 }
 
+impl<T> Sub for Polynomial<T>
+where
+    T: UnitalMagma + Invertible,
+{
+    type Output = Self;
+    fn sub(self, right: Self) -> Self {
+        self + -right
+    }
+}
+
 impl<T> Shr<usize> for Polynomial<T>
 where
-    T: Closed + Unital + Clone,
+    T: UnitalMagma,
 {
     type Output = Self;
     fn shr(self, rhs: usize) -> Self {
@@ -77,9 +111,18 @@ where
     }
 }
 
-impl<T> std::convert::From<Vec<T>> for Polynomial<T>
+impl<T> From<T> for Polynomial<T>
 where
-    T: Closed + Unital,
+    T: UnitalMagma,
+{
+    fn from(value: T) -> Self {
+        vec![value].into()
+    }
+}
+
+impl<T> From<Vec<T>> for Polynomial<T>
+where
+    T: UnitalMagma,
 {
     fn from(coef: Vec<T>) -> Self {
         Self { coef }
@@ -88,7 +131,7 @@ where
 
 impl<T> std::ops::Index<usize> for Polynomial<T>
 where
-    T: Closed + Unital,
+    T: UnitalMagma,
 {
     type Output = T;
     fn index(&self, index: usize) -> &T {
@@ -98,7 +141,7 @@ where
 
 impl<T> num_traits::Zero for Polynomial<T>
 where
-    T: Closed + Unital + Clone,
+    T: UnitalMagma,
 {
     fn zero() -> Self {
         Self::new()
@@ -111,7 +154,7 @@ where
 
 impl<T> IntoIterator for Polynomial<T>
 where
-    T: Closed + Unital,
+    T: UnitalMagma,
 {
     type Item = T;
     type IntoIter = <Vec<T> as IntoIterator>::IntoIter;
@@ -122,7 +165,7 @@ where
 
 impl<'a, T> IntoIterator for &'a Polynomial<T>
 where
-    T: Closed + Unital,
+    T: UnitalMagma,
 {
     type Item = &'a T;
     type IntoIter = <&'a Vec<T> as IntoIterator>::IntoIter;
@@ -133,7 +176,7 @@ where
 
 impl<'a, T> IntoIterator for &'a mut Polynomial<T>
 where
-    T: Closed + Unital,
+    T: UnitalMagma,
 {
     type Item = &'a mut T;
     type IntoIter = <&'a mut Vec<T> as IntoIterator>::IntoIter;
@@ -144,7 +187,7 @@ where
 
 impl<T> std::iter::FromIterator<T> for Polynomial<T>
 where
-    T: Closed + Unital,
+    T: UnitalMagma,
 {
     fn from_iter<U>(iter: U) -> Self
     where
@@ -154,8 +197,8 @@ where
     }
 }
 
-impl<T> Associative for Polynomial<T> where T: Monoid + Clone {}
+impl<T> Associative for Polynomial<T> where T: Monoid {}
 
-impl<T> Unital for Polynomial<T> where T: Unital + Clone {}
+impl<T> Unital for Polynomial<T> where T: UnitalMagma {}
 
-impl<T> Invertible for Polynomial<T> where T: Invertible + Clone {}
+impl<T> Invertible for Polynomial<T> where T: UnitalMagma + Invertible {}

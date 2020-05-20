@@ -5,7 +5,7 @@ use itertools::{enumerate, zip};
 
 pub fn subset_convolution<T>(a: Vec<T>, b: Vec<T>) -> Vec<T>
 where
-    T: Ring + std::clone::Clone,
+    T: Ring,
 {
     let n = a.len();
     assert!(n.is_power_of_two());
