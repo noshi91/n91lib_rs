@@ -1,62 +1,59 @@
-use std::cell::Cell;
+use num_traits::int::PrimInt;
+use rand::distributions::{
+    uniform::{SampleBorrow, SampleUniform},
+    Distribution, Standard,
+};
+use rand::{Rng as _, SeedableRng as _};
+use std::cell::RefCell;
+use std::ops::Range;
 use std::thread_local;
 
-thread_local!{
-    static STATE: Cell<u64> = Cell::new(91);
+type RngType = rand_xoshiro::Xoshiro256StarStar;
+
+thread_local! {
+    static RNG: RefCell<RngType> = RefCell::new(
+        RngType::seed_from_u64(91)
+    );
 }
 
-pub fn random() -> u64 {
-    STATE.with(|s| {
-        let mut x = s.get();
-        x ^= x << 13;
-        x ^= x >> 7;
-        x ^= x << 17;
-        s.set(x);
-        x
-    })
+pub fn random<T>() -> T
+where
+    Standard: Distribution<T>,
+{
+    RNG.with(|r| r.borrow_mut().gen())
 }
-
-use std::cmp::PartialOrd;
-use std::convert::TryFrom;
-use std::convert::TryInto;
-use std::marker::Copy;
-use std::ops::Add;
-use std::ops::Range;
-use std::ops::Sub;
 
 pub fn rand_int<T>(range: Range<T>) -> T
 where
-    T: Add<Output = T> + Sub<Output = T> + Copy + TryInto<u64> + TryFrom<u64>,
+    T: SampleUniform + SampleBorrow<T> + Sized,
 {
-    let len = (range.end - range.start).try_into().ok().unwrap();
-    let mask = !(!0 << (63 - len.leading_zeros()));
-    loop {
-        let v = random() & mask;
-        if v < len {
-            return range.start + T::try_from(v).ok().unwrap();
-        }
-    }
+    RNG.with(|r| r.borrow_mut().gen_range(range.start, range.end))
 }
 
 pub fn rand_range<T>(range: Range<T>) -> Range<T>
 where
-    T: Add<Output = T> + Sub<Output = T> + Copy + TryInto<u64> + TryFrom<u64> + PartialOrd,
+    T: PrimInt + SampleUniform + SampleBorrow<T> + Sized,
 {
-    let one = T::try_from(1).ok().unwrap();
-    let st = rand_int(range.start..range.end + one);
-    let en = rand_int(range.start..range.end + one + one);
-    if st <= en {
-        st..en
+    let one = T::one();
+    let x = rand_int(range.start..range.end + one + one);
+    let y = rand_int(range.start..range.end + one);
+    if x <= y {
+        x..y
     } else {
-        en..st - one
+        y..x - one
     }
 }
 
 pub fn rand_range_nonempty<T>(range: Range<T>) -> Range<T>
 where
-    T: Add<Output = T> + Sub<Output = T> + Copy + TryInto<u64> + TryFrom<u64> + PartialOrd,
+    T: PrimInt + SampleUniform + SampleBorrow<T> + Sized,
 {
-    let one = T::try_from(1).ok().unwrap();
-    let res = rand_range(range.start..range.end - one);
-    res.start..res.end + one
+    let one = T::one();
+    let x = rand_int(range.start..range.end);
+    let y = rand_int(range.start..range.end + one);
+    if x < y {
+        x..y
+    } else {
+        y..x + one
+    }
 }

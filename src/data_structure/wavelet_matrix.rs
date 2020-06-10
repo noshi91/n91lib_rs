@@ -18,7 +18,8 @@ impl WaveletMatrix {
             seq = zeros.chain(ones).collect();
         }
         Self {
-            data: data.into_iter()
+            data: data
+                .into_iter()
                 .rev()
                 .collect::<Vec<_>>()
                 .into_boxed_slice(),
@@ -154,7 +155,7 @@ fn test_wavelet_matrix() {
     //count
     for _ in 0..q {
         let idxrng = rand_range(0..n);
-        let valrng = rand_range(0..s);
+        let valrng = rand_range(0..s - 1);
         assert_eq!(
             wm.count(idxrng.clone(), valrng.clone()),
             seq[idxrng].iter().filter(|&x| valrng.contains(x)).count()
