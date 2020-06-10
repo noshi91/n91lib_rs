@@ -1,3 +1,13 @@
+/*
+
+References
+
+Takanori, M. (Apr 5, 2013)
+競技プログラミングでの線型方程式系 - SlideShare
+https://www.slideshare.net/tmaehara/ss-18244588
+
+*/
+
 use num_traits::float::Float;
 use num_traits::zero;
 
