@@ -1,4 +1,4 @@
-use crate::other::rand::rand_int;
+use crate::other::rand::random;
 use std::cmp::Ord;
 use std::mem::swap;
 
@@ -54,11 +54,7 @@ impl<T: Ord> RandomizedMeldableHeap<T> {
                 if s.item < other.item {
                     swap(s, &mut other);
                 }
-                if rand_int(0..2) != 0 {
-                    &mut s.left
-                } else {
-                    &mut s.right
-                }.append2(other);
+                if random() { &mut s.left } else { &mut s.right }.append2(other);
             }
         }
     }

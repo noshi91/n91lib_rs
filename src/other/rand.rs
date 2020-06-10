@@ -23,6 +23,10 @@ where
     RNG.with(|r| r.borrow_mut().gen())
 }
 
+pub fn rand_f64() -> f64 {
+    RNG.with(|r| r.borrow_mut().gen_range(0f64, 1f64))
+}
+
 pub fn rand_int<T>(range: Range<T>) -> T
 where
     T: SampleUniform + SampleBorrow<T> + Sized,
