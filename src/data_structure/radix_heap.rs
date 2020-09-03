@@ -2,9 +2,22 @@
 
 References
 
-Ahuja, R. K., Mehlhorn, K., Orlin, J., & Tarjan, R. E. (1990).
-Faster algorithms for the shortest path problem.
-Journal of the ACM (JACM), 37(2), 213-223.
+[1] Ahuja, R. K., Mehlhorn, K., Orlin, J., & Tarjan, R. E. (1990).
+    Faster algorithms for the shortest path problem.
+    Journal of the ACM (JACM), 37(2), 213-223.
+
+
+Description
+
+V: 要素の型
+c: 同時にヒープに入るキーの差の最大値
+
+u64 をキーとして、それに紐づいた要素を管理するヒープ。
+push する値は pop した値以上という条件を満たす必要がある。
+
+時間計算量 O(log(c)) / query
+
+Dijkstra 法での使用に適している。
 
 */
 

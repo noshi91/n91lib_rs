@@ -6,6 +6,18 @@ Takanori, M. (Apr 5, 2013)
 競技プログラミングでの線型方程式系 - SlideShare
 https://www.slideshare.net/tmaehara/ss-18244588
 
+
+Description
+
+a: n × n 行列
+b: n 次元ベクトル
+
+ax = b を満たす x を計算する。
+
+時間計算量: Θ(n^3)
+
+軽実装で誤差が小さい
+
 */
 
 use num_traits::float::Float;

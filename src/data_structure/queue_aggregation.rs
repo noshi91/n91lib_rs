@@ -2,10 +2,11 @@ use crate::data_structure::StackAggregation;
 use crate::other::algebraic::Monoid;
 use crate::other::Dual;
 use num_traits::zero;
+use std::clone::Clone;
 
 pub struct QueueAggregation<T>
 where
-    T: Monoid,
+    T: Monoid + Clone,
 {
     front_stack: StackAggregation<Dual<T>>,
     back_stack: Vec<T>,
@@ -14,7 +15,7 @@ where
 
 impl<T> QueueAggregation<T>
 where
-    T: Monoid,
+    T: Monoid + Clone,
 {
     pub fn new() -> Self {
         Self {

@@ -1,3 +1,22 @@
+/*
+
+References
+
+[1] van Leeuwen, J., & Wood, D. (1993).
+    Interval heaps. The Computer Journal, 36(3), 209-216.
+
+
+Description
+
+概要は以下のページを参照せよ
+
+https://scrapbox.io/data-structures/Interval_Heap
+
+[1] をあまり読み込んでいないため、
+いくらか異なる実装をしている可能性がある。
+
+*/
+
 use std::cmp::Ord;
 
 pub struct IntervalHeap<T: Ord> {

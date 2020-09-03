@@ -1,20 +1,21 @@
-use crate::other::algebraic::{Associative, Invertible, Monoid, Semiring, Unital, UnitalMagma};
+use crate::other::algebraic::{Abelian, CommutativeMonoid, Group, Monoid, Semiring};
 use itertools::{enumerate, zip};
-use num_traits::zero;
+use num_traits::{zero, Zero};
+use std::clone::Clone;
 use std::convert::From;
-use std::ops::{Add, AddAssign, Mul, Neg, Shr, Sub};
+use std::ops::{Add, AddAssign, Mul, Neg, Shl, Sub};
 
 #[derive(Clone)]
 pub struct Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid,
 {
     pub coef: Vec<T>,
 }
 
 impl<T> Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid,
 {
     pub fn new() -> Self {
         Vec::new().into()
@@ -28,26 +29,26 @@ where
     }
 }
 
-impl<T> Add for Polynomial<T>
+impl<T> Add<Self> for Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid + Clone,
 {
     type Output = Self;
-    fn add(mut self, mut right: Self) -> Self {
+    fn add(mut self, mut rhs: Self) -> Self {
         let n = self.coef.len();
-        let m = right.coef.len();
+        let m = rhs.coef.len();
         if n < m {
             self.coef.extend(vec![zero(); m - n]);
         } else {
-            right.coef.extend(vec![zero(); n - m]);
+            rhs.coef.extend(vec![zero(); n - m]);
         }
-        zip(self, right).map(|(a, b)| a + b).collect()
+        zip(self, rhs).map(|(a, b)| a + b).collect()
     }
 }
 
-impl<T> AddAssign for Polynomial<T>
+impl<T> AddAssign<Self> for Polynomial<T>
 where
-    T: UnitalMagma,
+    T: CommutativeMonoid + Clone,
 {
     fn add_assign(&mut self, rhs: Self) {
         let n = self.coef.len();
@@ -56,14 +57,14 @@ where
             self.coef.extend(vec![zero(); m - n]);
         }
         for (a, b) in zip(self, rhs) {
-            *a = a.clone() + b;
+            *a += b;
         }
     }
 }
 
 impl<T> Mul for Polynomial<T>
 where
-    T: Semiring,
+    T: Semiring + Clone,
 {
     type Output = Self;
     fn mul(self, right: Self) -> Self {
@@ -72,7 +73,7 @@ where
         let mut res = vec![zero::<T>(); n + m - 1];
         for (i, a) in enumerate(&self) {
             for (j, b) in enumerate(&right) {
-                res[i + j] = res[i + j].clone() + a.clone() * b.clone();
+                res[i + j] += a.clone() * b.clone();
             }
         }
         Self { coef: res }
@@ -81,7 +82,7 @@ where
 
 impl<T> Neg for Polynomial<T>
 where
-    T: UnitalMagma + Invertible,
+    T: Group,
 {
     type Output = Self;
     fn neg(self) -> Self {
@@ -91,7 +92,7 @@ where
 
 impl<T> Sub for Polynomial<T>
 where
-    T: UnitalMagma + Invertible,
+    T: Abelian + Clone,
 {
     type Output = Self;
     fn sub(self, right: Self) -> Self {
@@ -99,12 +100,12 @@ where
     }
 }
 
-impl<T> Shr<usize> for Polynomial<T>
+impl<T> Shl<usize> for Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid + Clone,
 {
     type Output = Self;
-    fn shr(self, rhs: usize) -> Self {
+    fn shl(self, rhs: usize) -> Self {
         let mut res = vec![zero(); rhs];
         res.extend(self);
         Self { coef: res }
@@ -113,7 +114,7 @@ where
 
 impl<T> From<T> for Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid,
 {
     fn from(value: T) -> Self {
         vec![value].into()
@@ -122,7 +123,7 @@ where
 
 impl<T> From<Vec<T>> for Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid,
 {
     fn from(coef: Vec<T>) -> Self {
         Self { coef }
@@ -131,7 +132,7 @@ where
 
 impl<T> std::ops::Index<usize> for Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid,
 {
     type Output = T;
     fn index(&self, index: usize) -> &T {
@@ -139,9 +140,9 @@ where
     }
 }
 
-impl<T> num_traits::Zero for Polynomial<T>
+impl<T> Zero for Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid + Clone,
 {
     fn zero() -> Self {
         Self::new()
@@ -154,7 +155,7 @@ where
 
 impl<T> IntoIterator for Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid,
 {
     type Item = T;
     type IntoIter = <Vec<T> as IntoIterator>::IntoIter;
@@ -165,7 +166,7 @@ where
 
 impl<'a, T> IntoIterator for &'a Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid,
 {
     type Item = &'a T;
     type IntoIter = <&'a Vec<T> as IntoIterator>::IntoIter;
@@ -176,7 +177,7 @@ where
 
 impl<'a, T> IntoIterator for &'a mut Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid,
 {
     type Item = &'a mut T;
     type IntoIter = <&'a mut Vec<T> as IntoIterator>::IntoIter;
@@ -187,7 +188,7 @@ where
 
 impl<T> std::iter::FromIterator<T> for Polynomial<T>
 where
-    T: UnitalMagma,
+    T: Monoid,
 {
     fn from_iter<U>(iter: U) -> Self
     where
@@ -196,9 +197,3 @@ where
         Vec::from_iter(iter).into()
     }
 }
-
-impl<T> Associative for Polynomial<T> where T: Monoid {}
-
-impl<T> Unital for Polynomial<T> where T: UnitalMagma {}
-
-impl<T> Invertible for Polynomial<T> where T: UnitalMagma + Invertible {}

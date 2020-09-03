@@ -1,16 +1,17 @@
 use crate::other::algebraic::Monoid;
 use num_traits::zero;
+use std::clone::Clone;
 
 pub struct StackAggregation<T>
 where
-    T: Monoid,
+    T: Monoid + Clone,
 {
     data: Vec<T>,
 }
 
 impl<T> StackAggregation<T>
 where
-    T: Monoid,
+    T: Monoid + Clone,
 {
     pub fn new() -> Self {
         Self { data: Vec::new() }

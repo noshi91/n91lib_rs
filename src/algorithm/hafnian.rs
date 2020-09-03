@@ -1,10 +1,37 @@
+/*
+
+References
+
+[1] Björklund, A. (2012, January).
+    Counting perfect matchings as fast as Ryser.
+    In Proceedings of the twenty-third annual ACM-SIAM
+    symposium on Discrete Algorithms (pp. 914-921).
+    Society for Industrial and Applied Mathematics.
+
+
+Description
+
+a: 対角成分が 0 の 2n × 2n 対称行列
+
+a のハフニアンを計算する。
+
+時間計算量 Θ(2^n n^2)
+空間計算量 O(n^4)
+
+ハフニアンは、その行列を隣接行列に持つ多重グラフの
+完全マッチングの個数と等しい。
+
+*/
+
+
 use crate::other::algebraic::Ring;
 use crate::other::Polynomial;
 use itertools::zip;
+use std::clone::Clone;
 
 pub fn hafnian<T>(a: &Vec<Vec<T>>) -> T
 where
-    T: Ring,
+    T: Ring + Clone,
 {
     assert_eq!(a.len() % 2, 0);
     HafnianFn { n: a.len() / 2 }.solve(a)
@@ -17,7 +44,7 @@ struct HafnianFn {
 impl HafnianFn {
     fn solve<T>(&self, a: &Vec<Vec<T>>) -> T
     where
-        T: Ring,
+        T: Ring + Clone,
     {
         self.f((0..self.n * 2)
             .map(|i| (0..i).map(|j| a[i][j].clone().into()).collect())
@@ -27,7 +54,7 @@ impl HafnianFn {
 
     fn f<T>(&self, mut b: Vec<Vec<Poly<T>>>) -> Poly<T>
     where
-        T: Ring,
+        T: Ring + Clone,
     {
         if b.is_empty() {
             return T::one().into();
@@ -40,18 +67,18 @@ impl HafnianFn {
 
         for (b, x) in zip(&mut b, &x) {
             for (b, y) in zip(b, &y) {
-                *b += self.bound(x.clone() * y.clone() >> 1);
+                *b += self.bound(x.clone() * y.clone() << 1);
             }
         }
         for (b, y) in zip(&mut b, &y) {
             for (b, x) in zip(b, &x) {
-                *b += self.bound(x.clone() * y.clone() >> 1);
+                *b += self.bound(x.clone() * y.clone() << 1);
             }
         }
 
         let all = self.f(b);
 
-        let edge = (x.last().unwrap().clone() >> 1) + T::one().into();
+        let edge = (x.last().unwrap().clone() << 1) + T::one().into();
 
         self.bound(edge * all) - zero
     }

@@ -1,94 +1,24 @@
 use num_traits::{One, Zero};
-use std::clone::Clone;
-use std::ops::{Add, Mul, Neg};
-
-pub trait Closed
-where
-    Self: Add<Output = Self> + Sized,
-{
-}
-
-impl<T> Closed for T where T: Add<Output = T> {}
-
-pub trait Associative
-where
-    Self: Closed,
-{
-}
-
-pub trait Commutative
-where
-    Self: Closed,
-{
-}
-
-pub trait Unital
-where
-    Self: Closed + Zero,
-{
-}
-
-pub trait Invertible
-where
-    Self: Closed + Unital + Neg<Output = Self>,
-{
-}
-
-pub trait ClosedMul
-where
-    Self: Mul<Output = Self> + Sized,
-{
-}
-
-impl<T> ClosedMul for T where T: Mul<Output = T> + Sized {}
-
-pub trait AssociativeMul
-where
-    Self: ClosedMul,
-{
-}
-
-pub trait UnitalMul
-where
-    Self: ClosedMul + One,
-{
-}
-
-pub trait Distributive
-where
-    Self: Closed + ClosedMul,
-{
-}
-
-pub trait Annihilation
-where
-    Self: Closed + Unital + ClosedMul,
-{
-}
+use std::marker::Sized;
+use std::ops::{Add, AddAssign, Mul, Neg};
 
 macro_rules! trait_alias {
-    ($name:ident = $first:ident $(+ $rest:ident)*) => {
-        pub trait $name: $first $(+ $rest)* {}
-        impl<T: $first $(+ $rest)*> $name for T {}
+    ($name:ident = $($t:tt)*) => {
+        pub trait $name: $($t)* {}
+        impl<T: $($t)*> $name for T {}
     };
 }
 
-trait_alias! {Magma = Closed + Clone}
+trait_alias! {Semigroup = Add<Self, Output = Self> + Sized}
 
-trait_alias! {Semigroup = Magma + Associative}
+trait_alias! {Monoid = Semigroup + Zero}
 
-trait_alias! {UnitalMagma = Magma + Unital}
+trait_alias! {CommutativeMonoid = Monoid + AddAssign<Self>}
 
-trait_alias! {Monoid = Semigroup + UnitalMagma}
+trait_alias! {Group = Monoid + Neg<Output = Self>}
 
-trait_alias! {Group = Monoid + Invertible}
+trait_alias! {Abelian = Group + CommutativeMonoid}
 
-trait_alias! {MagmaMul = ClosedMul}
+trait_alias! {Semiring = CommutativeMonoid + Mul<Self, Output = Self> + Sized + One}
 
-trait_alias! {SemigroupMul = MagmaMul + AssociativeMul}
-
-trait_alias! {MonoidMul = SemigroupMul + UnitalMul}
-
-trait_alias! {Semiring = Monoid + Commutative + MonoidMul + Distributive + Annihilation}
-
-trait_alias! {Ring = Semiring + Invertible}
+trait_alias! {Ring = Semiring + Group}

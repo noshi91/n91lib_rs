@@ -6,6 +6,15 @@ Conchon, S., & Filliâtre, J. C. (2007, October).
 A persistent union-find data structure.
 In Proceedings of the 2007 workshop on Workshop on ML (pp. 37-46).
 
+
+Description
+
+時間計算量: Ω(n) / query
+
+直前のバージョンとの差分を持つシンプルな永続配列。
+操作の度にバージョンの木を自身が根になるように組み替える
+（rerooting）ため、特定の入力では著しく効率が上昇する。
+
 */
 
 use std::cell;

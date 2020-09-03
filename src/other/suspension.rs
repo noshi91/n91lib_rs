@@ -40,10 +40,10 @@ where
     }
 
     fn execute(&self) {
-        match &*self.0.borrow() {
-            &Inner::Unevaluated(_) => (),
-            &Inner::Evaluating => panic!("cyclic calling"),
-            &Inner::Evaluated(_) => return,
+        match *self.0.borrow() {
+            Inner::Unevaluated(_) => (),
+            Inner::Evaluating => panic!("cyclic calling"),
+            Inner::Evaluated(_) => return,
         }
         let x = mem::replace(&mut *self.0.borrow_mut(), Inner::Evaluating);
         let value = match x {

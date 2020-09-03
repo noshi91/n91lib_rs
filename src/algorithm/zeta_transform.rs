@@ -1,8 +1,9 @@
 use crate::other::algebraic::{Group, Semigroup};
+use std::clone::Clone;
 
 pub fn subset_zeta<T>(a: &mut Vec<T>)
 where
-    T: Semigroup,
+    T: Semigroup + Clone,
 {
     let n = a.len();
     assert!(n.is_power_of_two());
@@ -17,7 +18,7 @@ where
 
 pub fn subset_mobius<T>(a: &mut Vec<T>)
 where
-    T: Group,
+    T: Group + Clone,
 {
     let n = a.len();
     assert!(n.is_power_of_two());

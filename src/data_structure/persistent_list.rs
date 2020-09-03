@@ -38,9 +38,9 @@ where
     T: Clone,
 {
     pub fn append(&self, other: Self) -> Self {
-        match &self.0 {
-            &None => other,
-            &Some(ref p) => p.next.append(other).cons(p.value.clone()),
+        match self.0 {
+            None => other,
+            Some(ref p) => p.next.append(other).cons(p.value.clone()),
         }
     }
 

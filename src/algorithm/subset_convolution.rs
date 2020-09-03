@@ -2,10 +2,11 @@ use crate::algorithm::zeta_transform;
 use crate::other::algebraic::Ring;
 use crate::other::Polynomial;
 use itertools::{enumerate, zip};
+use std::clone::Clone;
 
 pub fn subset_convolution<T>(a: Vec<T>, b: Vec<T>) -> Vec<T>
 where
-    T: Ring,
+    T: Ring + Clone,
 {
     let n = a.len();
     assert!(n.is_power_of_two());
@@ -13,7 +14,7 @@ where
 
     let ranked_zeta = |a: Vec<_>| {
         let mut a_ext = enumerate(a)
-            .map(|(i, a)| Polynomial::from(vec![a]) >> i.count_ones() as usize)
+            .map(|(i, a)| Polynomial::from(vec![a]) << i.count_ones() as usize)
             .collect();
         zeta_transform::subset_zeta(&mut a_ext);
         a_ext

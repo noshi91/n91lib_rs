@@ -45,11 +45,11 @@ impl<T: Ord> SkewHeap<T> {
     }
 
     fn append2(&mut self, mut other: Box<Node<T>>) {
-        match &mut self.0 {
+        match self.0 {
             None => {
                 self.0 = Some(other);
             }
-            Some(s) => {
+            Some(ref mut s) => {
                 if s.item < other.item {
                     swap(s, &mut other);
                 }

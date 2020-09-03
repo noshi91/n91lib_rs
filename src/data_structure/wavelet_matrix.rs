@@ -1,3 +1,28 @@
+/*
+
+References
+
+[1] Claude, F., Navarro, G., & Ordónez, A. (2015).
+    The wavelet matrix: An efficient wavelet tree for large alphabets.
+    Information Systems, 47, 15-32.
+
+[2] Gagie, T., Puglisi, S. J., & Turpin, A. (2009, August).
+    Range quantile queries: Another virtue of wavelet trees.
+    In International Symposium on String Processing and Information Retrieval (pp. 1-6).
+    Springer, Berlin, Heidelberg.
+
+
+Description
+
+概要は以下のページを参照せよ。
+
+https://scrapbox.io/data-structures/Wavelet_Matrix
+
+この実装は（概ね） compact だが succinct ではない。
+
+*/
+
+
 use crate::data_structure::BitVector;
 use crate::other::bit::access;
 use std::ops::Range;

@@ -6,6 +6,14 @@ Conchon, S., & Filliâtre, J. C. (2007, October).
 A persistent union-find data structure.
 In Proceedings of the 2007 workshop on Workshop on ML (pp. 37-46).
 
+
+Description
+
+最悪計算量はよくわからないが、
+直感的には Ω(n) 掛かりそうに見える。
+特定の入力では著しく高速になるようである。
+実際、Library-Checker のケースでは最速に近い実行速度になった。
+
 */
 
 use crate::data_structure::RerootingPersistentArray;
