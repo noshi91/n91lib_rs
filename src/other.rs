@@ -1,7 +1,7 @@
 pub mod algebraic;
 pub mod bit;
 mod dual;
-mod fp;
+pub mod fp;
 mod gcd;
 pub mod mod_inv;
 mod polynomial;

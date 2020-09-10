@@ -1,6 +1,6 @@
 use num_traits::{One, Zero};
 use std::marker::Sized;
-use std::ops::{Add, AddAssign, Mul, Neg};
+use std::ops::{Add, AddAssign, Mul, Neg, MulAssign,Div,DivAssign};
 
 macro_rules! trait_alias {
     ($name:ident = $($t:tt)*) => {
@@ -21,4 +21,6 @@ trait_alias! {Abelian = Group + CommutativeMonoid}
 
 trait_alias! {Semiring = CommutativeMonoid + Mul<Self, Output = Self> + Sized + One}
 
-trait_alias! {Ring = Semiring + Group}
+trait_alias! {Ring = Semiring + Abelian}
+
+trait_alias! {Field = Ring + MulAssign<Self> + Div<Self, Output = Self> + DivAssign<Self>}

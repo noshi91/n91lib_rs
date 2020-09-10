@@ -1,6 +1,6 @@
 use crate::other::algebraic::{Abelian, CommutativeMonoid, Group, Monoid, Semiring};
 use itertools::{enumerate, zip};
-use num_traits::{zero, Zero};
+use num_traits::{one, zero, Zero};
 use std::clone::Clone;
 use std::convert::From;
 use std::ops::{Add, AddAssign, Mul, Neg, Shl, Sub};
@@ -26,6 +26,20 @@ where
             self.coef.split_off(len);
         }
         self
+    }
+
+    pub fn evaluate<U>(self, x: &U) -> U
+    where
+        T: Mul<U, Output = U> + Clone,
+        U: Semiring + Clone,
+    {
+        let mut res: U = zero();
+        let mut pow: U = one();
+        for c in self {
+            res += c * pow.clone();
+            pow = pow * x.clone();
+        }
+        res
     }
 }
 

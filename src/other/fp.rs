@@ -2,7 +2,7 @@ use std::convert::From;
 use std::iter;
 use std::ops;
 
-const P: u32 = 1000000007;
+pub const P: u32 = 1000000007;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Fp(pub u32);
