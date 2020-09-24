@@ -1,6 +1,6 @@
 use num_traits::{One, Zero};
 use std::marker::Sized;
-use std::ops::{Add, AddAssign, Mul, Neg, MulAssign,Div,DivAssign};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg};
 
 macro_rules! trait_alias {
     ($name:ident = $($t:tt)*) => {

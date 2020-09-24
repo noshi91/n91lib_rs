@@ -7,6 +7,7 @@ pub mod physicists_queue;
 pub mod queue_aggregation;
 pub mod radix_heap;
 pub mod randomized_meldable_heap;
+pub mod range_add_sum_2d;
 mod rerooting_persistent_array;
 pub mod skew_heap;
 mod stack_aggregation;

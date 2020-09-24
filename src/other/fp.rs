@@ -124,6 +124,13 @@ impl ops::Mul<Fp> for Fp {
     }
 }
 
+impl ops::Mul<usize> for Fp {
+    type Output = Fp;
+    fn mul(self, rhs: usize) -> Fp {
+        self * Fp::from(rhs)
+    }
+}
+
 impl ops::MulAssign<Fp> for Fp {
     fn mul_assign(&mut self, rhs: Fp) {
         *self = *self * rhs;
