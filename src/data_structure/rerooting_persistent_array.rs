@@ -94,8 +94,8 @@ impl<T> Clone for RerootingPersistentArray<T> {
 fn test_rerooting_persistent_array() {
     use crate::other::rand::rand_int;
 
-    let n = 1 << 6;
-    let q = 1 << 6;
+    let n = 1 << 5;
+    let q = 1 << 5;
     let s = 1 << 20;
     let mut naive = vec![(0..n).map(|_| rand_int(0..s)).collect::<Vec<_>>()];
     let mut p_arr = vec![

@@ -1,16 +1,16 @@
-mod bit_vector;
+pub mod bit_vector;
 pub mod conchon_filliatre_persistent_union_find;
 pub mod fenwick_tree;
 pub mod interval_heap;
-mod persistent_list;
+pub mod persistent_list;
 pub mod physicists_queue;
 pub mod queue_aggregation;
 pub mod radix_heap;
 pub mod randomized_meldable_heap;
 pub mod range_add_sum_2d;
-mod rerooting_persistent_array;
+pub mod rerooting_persistent_array;
 pub mod skew_heap;
-mod stack_aggregation;
+pub mod stack_aggregation;
 pub mod wavelet_matrix;
 
 pub use bit_vector::BitVector;

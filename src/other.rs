@@ -1,10 +1,11 @@
 pub mod algebraic;
 pub mod bit;
-mod dual;
+pub mod dual;
 pub mod fp;
-mod gcd;
+pub mod gcd;
+pub mod linked_list;
 pub mod mod_inv;
-mod polynomial;
+pub mod polynomial;
 pub mod rand;
 pub mod suspension;
 
