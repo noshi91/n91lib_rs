@@ -120,7 +120,7 @@ where
                         p.move_next();
                     }
                     let mut sum = left.remove_current().unwrap();
-                    std::mem::drop(left);
+                    drop(left);
                     sum = sum + (-p.remove_current().unwrap().remove_current().unwrap());
                     if p.current().map_or(false, |r| *r == right) {
                         p.remove_current();
@@ -144,7 +144,7 @@ where
         }
     }
 
-    std::mem::drop(focus);
+    drop(focus);
 
     base.pop_front();
     base.into_iter()
@@ -280,30 +280,35 @@ fn test_maximum_k_subarray() {
     use crate::other::rand::rand_int;
     use std::cmp::max;
 
-    let q = 100;
-    let n = 100;
-    let s: i64 = 100;
-    for _ in 0..q {
-        let n = rand_int(0..n);
-        let k = rand_int(0..n + 3);
-        let a: Vec<_> = (0..n).map(|_| rand_int(-s..s + 1)).collect();
+    fn test_internal(q: usize, n: usize, s: i64, k: usize) {
+        for _ in 0..q {
+            let n = rand_int(0..n);
+            let k = rand_int(0..k);
+            let a: Vec<_> = (0..n).map(|_| rand_int(-s..s + 1)).collect();
 
-        let naive = {
-            let mut sum = vec![0; n + 1];
-            for i in 0..n {
-                sum[i + 1] = sum[i] + a[i];
-            }
-            let mut dp = vec![0; n + 1];
-            for _ in 0..k {
-                let mut acc = 0;
-                for i in 1..n + 1 {
-                    acc = max(acc, dp[i] - sum[i]);
-                    dp[i] = max(dp[i - 1], acc + sum[i]);
+            let naive = {
+                let mut sum = vec![0; n + 1];
+                for i in 0..n {
+                    sum[i + 1] = sum[i] + a[i];
                 }
-            }
-            dp[n]
-        };
-        let res = maximum_k_subarray(a, k);
-        assert_eq!(res, naive);
+                let mut dp = vec![0; n + 1];
+                for _ in 0..k {
+                    let mut acc = 0;
+                    for i in 1..n + 1 {
+                        acc = max(acc, dp[i] - sum[i]);
+                        dp[i] = max(dp[i - 1], acc + sum[i]);
+                    }
+                }
+                dp[n]
+            };
+            let res = maximum_k_subarray(a, k);
+            assert_eq!(res, naive);
+        }
     }
+
+    test_internal(100, 100, 10, 100);
+    test_internal(100, 100, 100, 100);
+    test_internal(100, 100, 10000, 100);
+    test_internal(100, 100, 100, 10);
+    test_internal(10, 10, 10, 10);
 }
