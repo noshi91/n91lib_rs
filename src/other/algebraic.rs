@@ -9,18 +9,20 @@ macro_rules! trait_alias {
     };
 }
 
-trait_alias! {Semigroup = Add<Self, Output = Self> + Sized}
+trait_alias! {Semigroup = Add<Output = Self> + Sized}
 
 trait_alias! {Monoid = Semigroup + Zero}
 
-trait_alias! {CommutativeMonoid = Monoid + AddAssign<Self>}
+trait_alias! {CommutativeMonoid = Monoid + AddAssign}
 
 trait_alias! {Group = Monoid + Neg<Output = Self>}
 
 trait_alias! {Abelian = Group + CommutativeMonoid + Sub<Output = Self> + SubAssign}
 
-trait_alias! {Semiring = CommutativeMonoid + Mul<Self, Output = Self> + Sized + One}
+trait_alias! {Semiring = CommutativeMonoid + Mul<Output = Self> + Sized + One}
 
 trait_alias! {Ring = Semiring + Abelian}
 
-trait_alias! {Field = Ring + MulAssign<Self> + Div<Self, Output = Self> + DivAssign<Self>}
+trait_alias! {CommutativeRing = Ring + MulAssign}
+
+trait_alias! {Field = CommutativeRing + Div<Output = Self> + DivAssign}

@@ -163,3 +163,17 @@ impl ops::SubAssign<Fp> for Fp {
         self.0 -= rhs.0;
     }
 }
+
+use rand::{
+    distributions::{Distribution, Standard},
+    Rng,
+};
+
+impl Distribution<Fp> for Standard {
+    fn sample<R>(&self, rng: &mut R) -> Fp
+    where
+        R: Rng + ?Sized,
+    {
+        Fp(rng.gen_range(0, P))
+    }
+}

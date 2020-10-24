@@ -1,5 +1,6 @@
 pub mod bipartite_hamiltonian_cycle;
 pub mod determinant;
+pub mod division_free_determinant;
 pub mod givens_rotation;
 pub mod hafnian;
 pub mod maximum_k_subarray;
