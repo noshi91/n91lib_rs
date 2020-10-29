@@ -20,3 +20,11 @@ pub fn select(bit: usize, k: usize) -> usize {
     }
     st
 }
+
+pub fn bsf(bit: usize) -> usize {
+    bit.trailing_zeros() as usize
+}
+
+pub fn bsr(bit: usize) -> usize {
+    WORD - 1 - bit.leading_zeros() as usize
+}

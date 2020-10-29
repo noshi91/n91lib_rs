@@ -8,12 +8,15 @@ pub mod queue_aggregation;
 pub mod radix_heap;
 pub mod randomized_meldable_heap;
 pub mod range_add_sum_2d;
+pub mod range_minimum_query;
 pub mod rerooting_persistent_array;
 pub mod skew_heap;
+pub mod sparse_table;
 pub mod stack_aggregation;
 pub mod wavelet_matrix;
 
 pub use bit_vector::BitVector;
 pub use persistent_list::PersistentList;
 pub use rerooting_persistent_array::RerootingPersistentArray;
+pub use sparse_table::SparseTable;
 pub use stack_aggregation::StackAggregation;

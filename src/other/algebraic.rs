@@ -11,6 +11,8 @@ macro_rules! trait_alias {
 
 trait_alias! {Semigroup = Add<Output = Self> + Sized}
 
+trait_alias! {Band = Semigroup}
+
 trait_alias! {Monoid = Semigroup + Zero}
 
 trait_alias! {CommutativeMonoid = Monoid + AddAssign}
