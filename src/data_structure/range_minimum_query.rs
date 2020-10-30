@@ -61,10 +61,10 @@ where
     }
 
     pub fn len(&self) -> usize {
-        WORD * self.large.len() + self.small.last().unwrap().len()
+        WORD * (self.small.len() - 1) + self.small.last().unwrap().len()
     }
 
-    pub fn min(&self, range: RangeInclusive<usize>) -> T {
+    pub fn query(&self, range: RangeInclusive<usize>) -> T {
         let (start, end) = range.into_inner();
         assert!(start <= end);
         assert!(end < self.len());
@@ -151,7 +151,7 @@ fn test_range_minimum_query() {
                 let r = r.start..=r.end - 1;
 
                 let naive = *a[r.clone()].iter().min().unwrap();
-                assert_eq!(naive, rmq.min(r));
+                assert_eq!(naive, rmq.query(r));
             }
         }
     }

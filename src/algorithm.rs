@@ -6,6 +6,7 @@ pub mod hafnian;
 pub mod max_min_convolution;
 pub mod maximum_k_subarray;
 pub mod number_theoretic_transform;
+pub mod permutation_tree;
 pub mod pow;
 pub mod quick_select;
 pub mod subset_convolution;

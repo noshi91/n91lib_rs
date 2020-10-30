@@ -17,6 +17,7 @@ pub mod wavelet_matrix;
 
 pub use bit_vector::BitVector;
 pub use persistent_list::PersistentList;
+pub use range_minimum_query::RangeMinimumQuery;
 pub use rerooting_persistent_array::RerootingPersistentArray;
 pub use sparse_table::SparseTable;
 pub use stack_aggregation::StackAggregation;
