@@ -10,7 +10,7 @@ pub mod number_theoretic_transform;
 pub mod permutation_tree;
 pub mod pow;
 pub mod quick_select;
-//pub mod smawk;
+pub mod smawk;
 pub mod subset_convolution;
 pub mod zeta_transform;
 
