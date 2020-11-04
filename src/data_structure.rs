@@ -1,3 +1,4 @@
+pub mod avl_tree;
 pub mod bit_vector;
 pub mod conchon_filliatre_persistent_union_find;
 pub mod fenwick_tree;

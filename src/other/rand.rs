@@ -61,3 +61,7 @@ where
         y..x + one
     }
 }
+
+pub fn rand_from_ratio(num: u32, den: u32) -> bool {
+    RNG.with(|r| r.borrow_mut().gen_ratio(num, den))
+}
