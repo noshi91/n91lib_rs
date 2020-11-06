@@ -11,6 +11,8 @@ pub mod permutation_tree;
 pub mod pow;
 pub mod quick_select;
 pub mod smawk;
+// pub mod staircase_matrix_minima;
+pub mod karger_stein;
 pub mod subset_convolution;
 pub mod zeta_transform;
 

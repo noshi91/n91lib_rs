@@ -1,5 +1,6 @@
 pub mod algebraic;
 pub mod bit;
+pub mod connectivity;
 pub mod dual;
 pub mod fp;
 pub mod gcd;
@@ -11,6 +12,7 @@ pub mod polynomial;
 pub mod rand;
 pub mod suspension;
 
+pub use connectivity::is_connected;
 pub use dual::Dual;
 pub use fp::Fp;
 pub use gcd::gcd;
