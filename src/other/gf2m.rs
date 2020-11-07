@@ -127,8 +127,15 @@ impl One for GF2m {
     }
 }
 
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 fn clmulepi32_si64(a: u32, b: u32) -> u64 {
-    use core::arch::x86_64::*;
+    assert!(is_x86_feature_detected!("pclmulqdq"));
+
+    #[cfg(target_arch = "x86")]
+    use std::arch::x86::*;
+
+    #[cfg(target_arch = "x86_64")]
+    use std::arch::x86_64::*;
 
     unsafe {
         _mm_extract_epi64(

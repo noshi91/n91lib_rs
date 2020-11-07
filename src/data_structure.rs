@@ -3,6 +3,7 @@ pub mod bit_vector;
 pub mod conchon_filliatre_persistent_union_find;
 pub mod fenwick_tree;
 pub mod interval_heap;
+pub mod level_ancestor;
 pub mod persistent_list;
 pub mod physicists_queue;
 pub mod queue_aggregation;
