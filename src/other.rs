@@ -9,6 +9,7 @@ pub mod linked_list;
 pub mod min;
 pub mod mod_inv;
 pub mod polynomial;
+pub mod queue;
 pub mod rand;
 pub mod suspension;
 
@@ -19,4 +20,5 @@ pub use gcd::gcd;
 pub use gf2m::GF2m;
 pub use min::Min;
 pub use polynomial::Polynomial;
+pub use queue::Queue;
 pub use suspension::Suspension;

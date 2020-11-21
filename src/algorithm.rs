@@ -13,6 +13,7 @@ pub mod quick_select;
 pub mod smawk;
 // pub mod staircase_matrix_minima;
 pub mod karger_stein;
+pub mod shortest_even_length_cycle;
 pub mod subset_convolution;
 pub mod zeta_transform;
 
