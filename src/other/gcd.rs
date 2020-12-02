@@ -1,5 +1,4 @@
 use num_traits::Zero;
-use std::clone::Clone;
 use std::mem::swap;
 use std::ops::RemAssign;
 

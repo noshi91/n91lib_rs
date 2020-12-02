@@ -43,8 +43,7 @@ fn range_relation(x: &Range<usize>, y: &Range<usize>) -> RangeRelation {
     }
 }
 
-use crate::other::algebraic::CommutativeMonoid;
-use std::clone::Clone;
+use crate::other::algebraic::{zero, CommutativeMonoid};
 use std::ops::Mul;
 
 pub struct RangeAddSum2d<T>
@@ -53,8 +52,6 @@ where
 {
     data: Box<[Node<T>]>,
 }
-
-use num_traits::zero;
 
 impl<T> RangeAddSum2d<T>
 where

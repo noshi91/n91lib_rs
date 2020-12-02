@@ -1,8 +1,6 @@
 use crate::data_structure::StackAggregation;
-use crate::other::algebraic::Monoid;
+use crate::other::algebraic::{zero, Monoid};
 use crate::other::Dual;
-use num_traits::zero;
-use std::clone::Clone;
 
 pub struct QueueAggregation<T>
 where

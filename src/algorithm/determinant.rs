@@ -13,9 +13,7 @@ a の行列式を計算する。
 
 */
 
-use crate::other::algebraic::Field;
-use num_traits::{one, zero};
-use std::clone::Clone;
+use crate::other::algebraic::{one, zero, Field};
 
 pub fn determinant<T>(mut a: Vec<Vec<T>>) -> T
 where

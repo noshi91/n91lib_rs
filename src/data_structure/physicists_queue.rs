@@ -2,7 +2,6 @@ use crate::data_structure::PersistentList;
 use crate::other::suspension;
 use crate::other::Suspension;
 use std::cell;
-use std::clone::Clone;
 use std::rc::Rc;
 
 type List<T> = PersistentList<T>;

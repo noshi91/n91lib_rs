@@ -1,4 +1,3 @@
-use std::clone::Clone;
 use std::rc::Rc;
 
 pub struct PersistentList<T>(Option<Rc<Node<T>>>);

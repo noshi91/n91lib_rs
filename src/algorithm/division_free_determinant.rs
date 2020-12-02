@@ -29,8 +29,7 @@ a の行列式を計算する。
 
 */
 
-use crate::other::algebraic::CommutativeRing;
-use num_traits::{one, zero};
+use crate::other::algebraic::{one, zero, CommutativeRing};
 
 pub fn division_free_determinant<T>(a: &Vec<Vec<T>>) -> T
 where

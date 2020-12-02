@@ -21,7 +21,9 @@ impl Fp {
     }
 }
 
-impl num_traits::Zero for Fp {
+use crate::other::algebraic::{One, Zero};
+
+impl Zero for Fp {
     fn zero() -> Fp {
         Fp(0)
     }
@@ -31,13 +33,9 @@ impl num_traits::Zero for Fp {
     }
 }
 
-impl num_traits::One for Fp {
+impl One for Fp {
     fn one() -> Fp {
         Fp(1)
-    }
-
-    fn is_one(&self) -> bool {
-        *self == Self::one()
     }
 }
 

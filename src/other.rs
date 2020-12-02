@@ -5,6 +5,7 @@ pub mod dual;
 pub mod fp;
 pub mod gcd;
 pub mod gf2m;
+pub mod integer_sqrt;
 pub mod linked_list;
 pub mod min;
 pub mod mod_inv;

@@ -27,7 +27,6 @@ a のハフニアンを計算する。
 use crate::other::algebraic::Ring;
 use crate::other::Polynomial;
 use itertools::zip;
-use std::clone::Clone;
 
 pub fn hafnian<T>(a: &Vec<Vec<T>>) -> T
 where

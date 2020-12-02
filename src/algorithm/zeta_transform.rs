@@ -1,5 +1,4 @@
 use crate::other::algebraic::{Group, Semigroup};
-use std::clone::Clone;
 
 pub fn subset_zeta<T>(a: &mut Vec<T>)
 where

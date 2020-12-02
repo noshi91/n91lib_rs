@@ -28,7 +28,6 @@ quick select を median of medians などに変えれば
 
 use crate::other::linked_list::{Cursor, LinkedList};
 use num_traits::{zero, Zero};
-use std::clone::Clone;
 use std::cmp::Ord;
 use std::ops::{Add, Neg};
 

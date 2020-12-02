@@ -187,8 +187,6 @@ impl<T> IntoIterator for LinkedList<T> {
     }
 }
 
-use std::clone::Clone;
-
 impl<T> Clone for Cursor<T> {
     fn clone(&self) -> Self {
         Self {

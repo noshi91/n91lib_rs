@@ -18,7 +18,6 @@ Description
 */
 
 use std::cell;
-use std::clone::Clone;
 use std::iter::FromIterator;
 use std::mem;
 use std::rc::Rc;

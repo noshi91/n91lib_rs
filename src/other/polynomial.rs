@@ -1,7 +1,7 @@
-use crate::other::algebraic::{Abelian, CommutativeMonoid, Group, Monoid, Semiring};
+use crate::other::algebraic::{
+    one, zero, Abelian, CommutativeMonoid, Group, Monoid, Semiring, Zero,
+};
 use itertools::{enumerate, zip};
-use num_traits::{one, zero, Zero};
-use std::clone::Clone;
 use std::convert::From;
 use std::ops::{Add, AddAssign, Mul, Neg, Shl, Sub};
 

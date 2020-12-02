@@ -6,7 +6,7 @@ F_2[x] mod (1 + x + x^M)
 
 */
 
-use num_traits::{One, Zero};
+use crate::other::algebraic::{One, Zero};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 pub const M: usize = 30;

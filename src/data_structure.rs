@@ -1,7 +1,9 @@
+pub mod array_mapped_trie_map;
 pub mod avl_tree;
 pub mod bit_vector;
 pub mod conchon_filliatre_persistent_union_find;
 pub mod fenwick_tree;
+pub mod fibonacci_heap;
 pub mod interval_heap;
 pub mod level_ancestor;
 pub mod persistent_list;

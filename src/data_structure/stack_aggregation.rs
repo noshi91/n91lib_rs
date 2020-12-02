@@ -1,6 +1,4 @@
-use crate::other::algebraic::Monoid;
-use num_traits::zero;
-use std::clone::Clone;
+use crate::other::algebraic::{zero, Monoid};
 
 pub struct StackAggregation<T>
 where

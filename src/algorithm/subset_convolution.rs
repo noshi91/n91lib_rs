@@ -2,7 +2,6 @@ use crate::algorithm::zeta_transform;
 use crate::other::algebraic::Ring;
 use crate::other::Polynomial;
 use itertools::{enumerate, zip};
-use std::clone::Clone;
 
 pub fn subset_convolution<T>(a: Vec<T>, b: Vec<T>) -> Vec<T>
 where

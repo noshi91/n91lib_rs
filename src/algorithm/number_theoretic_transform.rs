@@ -15,8 +15,8 @@ Fp 上の高速フーリエ変換。
 
 */
 
+use crate::other::algebraic::{one, zero};
 use crate::other::{fp::P, Fp};
-use num_traits::one;
 use std::mem::swap;
 
 pub fn number_theoretic_transform(g: Fp, a: &mut [Fp]) {
@@ -58,8 +58,6 @@ pub fn inverse_number_theoretic_transform(g: Fp, a: &mut [Fp]) {
         *a *= inv;
     }
 }
-
-use num_traits::zero;
 
 pub fn fp_convolution(g: Fp, mut a: Vec<Fp>, mut b: Vec<Fp>) -> Vec<Fp> {
     let n = a.len();

@@ -8,7 +8,7 @@ use std::cell::RefCell;
 use std::ops::Range;
 use std::thread_local;
 
-type RngType = rand_xoshiro::Xoshiro256StarStar;
+type RngType = rand::rngs::SmallRng;
 
 thread_local! {
     static RNG: RefCell<RngType> = RefCell::new(

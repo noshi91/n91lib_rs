@@ -1,5 +1,4 @@
-use crate::other::algebraic::{CommutativeMonoid, Semigroup};
-use num_traits::Zero;
+use crate::other::algebraic::{CommutativeMonoid, Semigroup, Zero};
 use std::ops::{Add, AddAssign};
 
 #[derive(Clone, Copy)]

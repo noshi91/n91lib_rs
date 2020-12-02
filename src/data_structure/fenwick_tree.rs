@@ -1,5 +1,4 @@
-use crate::other::algebraic::CommutativeMonoid;
-use std::clone::Clone;
+use crate::other::algebraic::{zero, CommutativeMonoid};
 
 #[derive(Clone)]
 pub struct FenwickTree<T>
@@ -8,8 +7,6 @@ where
 {
     data: Box<[T]>,
 }
-
-use num_traits::zero;
 
 impl<T> FenwickTree<T>
 where
@@ -141,4 +138,3 @@ where
         }
     }
 }
-
