@@ -15,48 +15,45 @@ impl<T: Ord> SkewHeap<T> {
     }
 
     pub fn pop(&mut self) -> Option<T> {
-        self.0.take().map(|mut r| {
+        self.0.take().map(|r| {
             let item = r.item;
-            *self = r.left;
-            self.append(&mut r.right);
+            *self = r.left + r.right;
             item
         })
     }
 
     pub fn push(&mut self, item: T) {
-        self.append(&mut Self(Some(Box::new(Node {
-            item: item,
-            left: Self::new(),
-            right: Self::new(),
-        }))));
+        *self = Self(self.0.take())
+            + Self(Some(Box::new(Node {
+                item,
+                left: Self::new(),
+                right: Self::new(),
+            })));
     }
 
     pub fn peek(&self) -> Option<&T> {
         self.0.as_ref().map(|p| &p.item)
     }
+}
 
-    pub fn append(&mut self, other: &mut Self) {
-        match other.0.take() {
-            None => (),
-            Some(o) => {
-                self.append2(o);
-            }
-        }
-    }
-
-    fn append2(&mut self, mut other: Box<Node<T>>) {
-        match self.0 {
-            None => {
-                self.0 = Some(other);
-            }
-            Some(ref mut s) => {
-                if s.item < other.item {
-                    swap(s, &mut other);
+impl<T> std::ops::Add for SkewHeap<T>
+where
+    T: Ord,
+{
+    type Output = Self;
+    fn add(self, rhs: Self) -> Self {
+        Self(match (self.0, rhs.0) {
+            (None, r) => r,
+            (s, None) => s,
+            (Some(mut s), Some(mut r)) => {
+                if s.item > r.item {
+                    swap(&mut s, &mut r);
                 }
-                s.right.append2(other);
+                s.right = s.right + Self(Some(r));
                 swap(&mut s.left, &mut s.right);
+                Some(s)
             }
-        }
+        })
     }
 }
 
@@ -67,7 +64,7 @@ fn skew_heap_test() {
     heap.push(-1);
     heap.push(1);
     heap.push(0);
-    assert_eq!(heap.peek(), Some(&1));
+    assert_eq!(heap.peek(), Some(&-1));
     heap.pop();
     assert_eq!(heap.peek(), Some(&0));
 }

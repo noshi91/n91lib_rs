@@ -1,3 +1,12 @@
+/*
+
+Reference
+
+[1] Chris Okasaki 著, 稲葉一浩、遠藤侑介 訳, 純粋関数型データ構造,
+    アスキードワンゴ, 2017
+
+*/
+
 use crate::data_structure::PersistentList;
 use crate::other::suspension::{LazyExpr, Suspension};
 use std::cell;
