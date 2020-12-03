@@ -7,6 +7,7 @@ pub mod fibonacci_heap;
 pub mod interval_heap;
 pub mod level_ancestor;
 pub mod persistent_list;
+pub mod persistent_pairing_heap;
 pub mod physicists_queue;
 pub mod queue_aggregation;
 pub mod radix_heap;

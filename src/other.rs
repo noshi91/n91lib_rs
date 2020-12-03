@@ -22,4 +22,3 @@ pub use gf2m::GF2m;
 pub use min::Min;
 pub use polynomial::Polynomial;
 pub use queue::Queue;
-pub use suspension::Suspension;

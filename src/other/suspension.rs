@@ -1,37 +1,37 @@
 use std::cell;
 use std::mem;
 
-pub struct Suspension<T, F>(cell::RefCell<Inner<T, F>>)
+pub struct Suspension<E>(cell::RefCell<Inner<E>>)
 where
-    F: Expr<Output = T>;
+    E: LazyExpr;
 
-enum Inner<T, F>
+enum Inner<E>
 where
-    F: Expr<Output = T>,
+    E: LazyExpr,
 {
-    Unevaluated(F),
+    Unevaluated(E),
     Evaluating,
-    Evaluated(T),
+    Evaluated(E::Output),
 }
 
-pub trait Expr {
+pub trait LazyExpr {
     type Output;
     fn evaluate(self) -> Self::Output;
 }
 
-impl<T, F> Suspension<T, F>
+impl<E> Suspension<E>
 where
-    F: Expr<Output = T>,
+    E: LazyExpr,
 {
-    pub fn new(f: F) -> Self {
-        Self(cell::RefCell::new(Inner::Unevaluated(f)))
+    pub fn new(e: E) -> Self {
+        Self(cell::RefCell::new(Inner::Unevaluated(e)))
     }
 
-    pub fn with_value(value: T) -> Self {
+    pub fn with_value(value: E::Output) -> Self {
         Self(cell::RefCell::new(Inner::Evaluated(value)))
     }
 
-    pub fn force(&self) -> cell::Ref<'_, T> {
+    pub fn force(&self) -> cell::Ref<'_, E::Output> {
         self.execute();
         cell::Ref::map(self.0.borrow(), |x| match x {
             &Inner::Evaluated(ref value) => value,

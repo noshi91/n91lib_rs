@@ -1,6 +1,5 @@
 use crate::data_structure::PersistentList;
-use crate::other::suspension;
-use crate::other::Suspension;
+use crate::other::suspension::{LazyExpr, Suspension};
 use std::cell;
 use std::rc::Rc;
 
@@ -17,7 +16,7 @@ where
     b_len: usize,
 }
 
-struct SuspList<T>(Rc<Suspension<List<T>, Func<T>>>)
+struct SuspList<T>(Rc<Suspension<Func<T>>>)
 where
     T: Clone;
 
@@ -140,7 +139,7 @@ where
     }
 }
 
-impl<T> suspension::Expr for Func<T>
+impl<T> LazyExpr for Func<T>
 where
     T: Clone,
 {
