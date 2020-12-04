@@ -14,6 +14,7 @@ pub mod quick_select;
 pub mod shortest_even_length_cycle;
 pub mod smawk;
 pub mod subset_convolution;
+pub mod wildcard_matching;
 pub mod zeta_transform;
 
 pub use determinant::determinant;
