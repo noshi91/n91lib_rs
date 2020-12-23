@@ -19,8 +19,7 @@ p の成す permutation graph の modular decomposition と見ることも出来
 時間計算量: Θ(n)
 
 p の連続部分列であって、その値域も連続部分列になるものを考える。
-これは連続部分列かつ module であると考えることが出来るため、
-partitive family と近い性質を持ち、木構造で表現することが出来る。
+これは weakly partitive family を成すため、木構造で表現することが出来る。
 
 */
 

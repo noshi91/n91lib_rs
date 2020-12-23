@@ -6,6 +6,23 @@ pub trait Zero: Add<Output = Self> + Sized {
     fn is_zero(&self) -> bool;
 }
 
+macro_rules! impl_zero {
+    ($($t: ty),*) => {
+        $(
+            impl Zero for $t {
+                fn zero() -> Self {
+                    0
+                }
+                fn is_zero(&self) -> bool {
+                    *self == 0
+                } 
+            }
+        )*
+    };
+}
+
+impl_zero! {u64, i64, usize, isize}
+
 pub trait One: Mul<Output = Self> + Sized {
     fn one() -> Self;
 }

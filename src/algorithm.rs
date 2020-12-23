@@ -1,6 +1,7 @@
 pub mod bipartite_hamiltonian_cycle;
 pub mod determinant;
 pub mod division_free_determinant;
+pub mod extreme_vertex_sets;
 pub mod givens_rotation;
 pub mod hafnian;
 pub mod karger_stein;

@@ -1,5 +1,7 @@
 pub mod algebraic;
 pub mod bit;
+pub mod cmp_assign;
+pub mod cmp_by_key;
 pub mod connectivity;
 pub mod dual;
 pub mod fp;
@@ -14,6 +16,7 @@ pub mod queue;
 pub mod rand;
 pub mod suspension;
 
+pub use cmp_by_key::CmpByKey;
 pub use connectivity::is_connected;
 pub use dual::Dual;
 pub use fp::Fp;
