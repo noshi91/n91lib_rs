@@ -1,6 +1,10 @@
 /*
 
+Reference
 
+[1] Minimizing Symmetric Submodular Functions, Satoru Iwata
+    http://www.iasi.cnr.it/~ventura/Cargese13/Lectures%20slides/Iwata4.pdf
+    
 
 Description
 
