@@ -87,9 +87,16 @@ pub fn select(bit: usize, k: usize) -> usize {
 }
 
 pub fn bsf(bit: usize) -> usize {
+    assert_ne!(bit, 0);
     bit.trailing_zeros() as usize
 }
 
 pub fn bsr(bit: usize) -> usize {
+    assert_ne!(bit, 0);
     WORD - 1 - bit.leading_zeros() as usize
+}
+
+pub fn ceil_log2(n: usize) -> usize {
+    assert_ne!(n, 0);
+    WORD - 1 - (2 * n - 1).leading_zeros() as usize
 }
