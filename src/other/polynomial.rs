@@ -3,7 +3,7 @@ use crate::other::algebraic::{
 };
 use itertools::{enumerate, zip};
 use std::convert::From;
-use std::ops::{Add, AddAssign, Mul, Neg, Shl, Sub};
+use std::ops::{Add, AddAssign, Mul, Neg, Shl, Sub, SubAssign};
 
 #[derive(Clone)]
 pub struct Polynomial<T>
@@ -111,6 +111,20 @@ where
     type Output = Self;
     fn sub(self, right: Self) -> Self {
         self + -right
+    }
+}
+
+impl<T> SubAssign for Polynomial<T>
+where
+    T: Abelian + Clone,
+{
+    fn sub_assign(&mut self, rhs: Self) {
+        if self.coef.len() < rhs.coef.len() {
+            self.coef.resize(rhs.coef.len(), zero());
+        }
+        for (s, r) in self.into_iter().zip(rhs) {
+            *s -= r;
+        }
     }
 }
 

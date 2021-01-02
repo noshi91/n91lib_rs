@@ -1,4 +1,5 @@
 pub mod bipartite_hamiltonian_cycle;
+pub mod chromatic_number;
 pub mod determinant;
 pub mod division_free_determinant;
 pub mod extreme_vertex_sets;

@@ -54,7 +54,9 @@ trait_alias! {Band = Semigroup}
 
 trait_alias! {Monoid = Semigroup + Zero}
 
-trait_alias! {CommutativeMonoid = Monoid + AddAssign}
+trait_alias! {CommutativeSemigroup = Semigroup + AddAssign}
+
+trait_alias! {CommutativeMonoid = Monoid + CommutativeSemigroup}
 
 trait_alias! {Group = Monoid + Neg<Output = Self>}
 
