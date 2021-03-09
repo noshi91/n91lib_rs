@@ -21,6 +21,10 @@ where
         Vec::new().into()
     }
 
+    pub fn degree(&self) -> Option<usize> {
+        self.coef.len().checked_sub(1)
+    }
+
     pub fn bound(mut self, len: usize) -> Self {
         if self.coef.len() > len {
             self.coef.split_off(len);
@@ -223,5 +227,41 @@ where
         U: IntoIterator<Item = T>,
     {
         Vec::from_iter(iter).into()
+    }
+}
+
+use std::fmt::{Debug, Error, Formatter};
+
+impl<T> Debug for Polynomial<T>
+where
+    T: Monoid + Debug,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+        let mut itr = self.coef.iter();
+        match itr.next() {
+            None => {
+                return f.write_str("0");
+            }
+            Some(c0) => {
+                c0.fmt(f)?;
+            }
+        }
+        match itr.next() {
+            None => {
+                return Ok(());
+            }
+            Some(c1) => {
+                f.write_str(" + ")?;
+                c1.fmt(f)?;
+                f.write_str(" x")?;
+            }
+        }
+        for (c, i) in itr.zip(2..) {
+            f.write_str(" + ")?;
+            c.fmt(f)?;
+            f.write_str(" x^")?;
+            i.fmt(f)?;
+        }
+        Ok(())
     }
 }

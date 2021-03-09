@@ -8,7 +8,7 @@ r: 1 の原始 2^n 乗根
 
 b_i := Σ_k a_k r^(ik) を計算する。
 
-時間計算量: Θ(2^n n)
+時間計算量: Θ(2^n n + log(p))
 
 Fp 上の高速フーリエ変換。
 法などにはさらに制限があるが、特に記述しない。
@@ -24,7 +24,7 @@ pub fn number_theoretic_transform(g: Fp, a: &mut [Fp]) {
     assert!(n.is_power_of_two());
     let mask = n - 1;
     let lgn = n.trailing_zeros();
-    let root = g.pow((P - 1) / n as u32);
+    let root = g.pow(((P - 1) / n as u32).into());
     let mut a = a;
     let mut b = vec![Fp(0); n].into_boxed_slice();
     let mut b: &mut [Fp] = &mut b;
@@ -33,7 +33,7 @@ pub fn number_theoretic_transform(g: Fp, a: &mut [Fp]) {
         swap(&mut a, &mut b);
         let i: usize = 1 << i_;
         let mut c: Fp = one();
-        let d = root.pow(i as u32);
+        let d = root.pow(i as u64);
 
         for j in (0..n).step_by(i) {
             let l = j * 2 & mask;

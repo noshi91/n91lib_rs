@@ -5,15 +5,18 @@ pub mod cmp_by_key;
 pub mod connectivity;
 pub mod dual;
 pub mod fp;
+pub mod fp_utils;
 pub mod gcd;
 pub mod gf2m;
 pub mod integer_sqrt;
 pub mod linked_list;
+pub mod matrix;
 pub mod min;
 pub mod mod_inv;
 pub mod polynomial;
 pub mod queue;
 pub mod rand;
+pub mod rec_lambda;
 pub mod suspension;
 
 pub use cmp_by_key::CmpByKey;

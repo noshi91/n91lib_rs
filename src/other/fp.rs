@@ -4,11 +4,16 @@ use std::ops;
 
 pub const P: u32 = 998244353;
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct Fp(pub u32);
 
 impl Fp {
-    pub fn pow(mut self, mut exp: u32) -> Fp {
+    pub fn pow(mut self, exp: u64) -> Fp {
+        let mut exp = if exp > P as u64 {
+            1 + (exp - 1) % P as u64
+        } else {
+            exp
+        } as u32;
         let mut res = Fp(1);
         while exp != 0 {
             if exp % 2 != 0 {
@@ -111,7 +116,7 @@ impl ops::Div for Fp {
 impl ops::DivAssign for Fp {
     fn div_assign(&mut self, rhs: Fp) {
         assert_ne!(rhs.0, 0);
-        *self *= rhs.pow(P - 2);
+        *self *= rhs.pow((P - 2).into());
     }
 }
 
@@ -162,6 +167,12 @@ impl ops::SubAssign<Fp> for Fp {
     }
 }
 
+impl Default for Fp {
+    fn default() -> Fp {
+        Fp(0)
+    }
+}
+
 use rand::{
     distributions::{Distribution, Standard},
     Rng,
@@ -173,5 +184,15 @@ impl Distribution<Fp> for Standard {
         R: Rng + ?Sized,
     {
         Fp(rng.gen_range(0, P))
+    }
+}
+
+use std::fmt::{Debug, Error, Formatter};
+
+impl Debug for Fp {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+        f.write_str("Fp(")?;
+        self.0.fmt(f)?;
+        f.write_str(")")
     }
 }

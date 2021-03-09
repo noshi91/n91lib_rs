@@ -11,6 +11,7 @@ pub mod max_min_convolution;
 pub mod maximum_k_subarray;
 pub mod number_theoretic_transform;
 pub mod permutation_tree;
+pub mod polynomial_matrix_prod;
 pub mod pow;
 pub mod quick_select;
 pub mod shortest_even_length_cycle;
