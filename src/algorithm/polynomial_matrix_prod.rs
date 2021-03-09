@@ -50,10 +50,6 @@ pub fn polynomial_matrix_prod(a: &Matrix<Polynomial<Fp>>, m: u64) -> Matrix<Fp> 
     let get = |i: u64| a.clone().map(|p| p.evaluate(&Fp::from(i)));
     let naive = |r: std::ops::Range<u64>| r.map(get).fold(Matrix::identity(n), |b, a| b * a);
 
-    if b == 0 {
-        return naive(0..m);
-    }
-
     let fp_ut = FpUtils::new((d * b + 1) as usize);
 
     let interpolate = |part: &[Matrix<Fp>], t: u64, len: usize| -> Vec<Matrix<Fp>> {
@@ -93,8 +89,8 @@ pub fn polynomial_matrix_prod(a: &Matrix<Polynomial<Fp>>, m: u64) -> Matrix<Fp> 
     use crate::other::rec_lambda::{MyFn, RecLambda};
 
     let eval_s = |eval_s: &dyn MyFn<u64, Vec<Matrix<Fp>>>, w: u64| -> Vec<Matrix<Fp>> {
-        if w == 1 {
-            return (0..d + 1).map(|i| get(i * b)).collect();
+        if w == 0 {
+            return vec![Matrix::identity(n)];
         }
 
         if w % 2 == 1 {
@@ -116,8 +112,8 @@ pub fn polynomial_matrix_prod(a: &Matrix<Polynomial<Fp>>, m: u64) -> Matrix<Fp> 
         }
     };
 
-    let seq = RecLambda::new(eval_s).call(b);
-    seq.into_iter().fold(Matrix::identity(n), |b, a| b * a) * naive((d * b + 1) * b..m)
+    let s = RecLambda::new(eval_s).call(b);
+    s.into_iter().fold(Matrix::identity(n), |b, a| b * a) * naive((d * b + 1) * b..m)
 }
 
 #[test]
@@ -145,6 +141,12 @@ fn test_polynomial_matrix_prod() {
             let n = rand_int(1..4);
             let d = rand_int(0..5);
             let m = rand_int(0..100);
+            test(n, d, m, crate::other::fp::P);
+        }
+        for _ in 0..100 {
+            let n = rand_int(1..4);
+            let d = rand_int(0..5);
+            let m = rand_int(0..5);
             test(n, d, m, crate::other::fp::P);
         }
     }
