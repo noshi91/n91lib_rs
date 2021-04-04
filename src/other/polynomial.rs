@@ -26,9 +26,7 @@ where
     }
 
     pub fn bound(mut self, len: usize) -> Self {
-        if self.coef.len() > len {
-            self.coef.split_off(len);
-        }
+        self.coef.truncate(len);
         self
     }
 

@@ -6,6 +6,7 @@ pub mod extreme_vertex_sets;
 pub mod givens_rotation;
 pub mod hafnian;
 pub mod karger_stein;
+pub mod larsch_algorithm;
 pub mod manually_gaussian_elimination;
 pub mod max_min_convolution;
 pub mod maximum_k_subarray;

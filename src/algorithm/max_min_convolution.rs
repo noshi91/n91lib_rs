@@ -39,7 +39,7 @@ where
     enum Elem {
         A(usize),
         B(usize),
-    };
+    }
     let mut idx = (0..n)
         .map(|i| Elem::A(i))
         .chain((0..m).map(|i| Elem::B(i)))
