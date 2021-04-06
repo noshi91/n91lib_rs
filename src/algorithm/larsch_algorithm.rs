@@ -53,7 +53,7 @@ impl Larsch {
 
 struct ReduceRow {
     n: usize,
-    i: usize,
+    cur_row: usize,
     state: usize,
     rec: Option<Box<ReduceCol>>,
 }
@@ -62,7 +62,7 @@ impl ReduceRow {
     fn new(n: usize) -> Self {
         Self {
             n,
-            i: 0,
+            cur_row: 0,
             state: 0,
             rec: match n / 2 {
                 0 => None,
@@ -76,11 +76,11 @@ impl ReduceRow {
         F: FnMut(usize, usize) -> T,
         T: Ord,
     {
-        let i = self.i;
-        self.i += 1;
-        if i % 2 == 0 {
+        let cur_row = self.cur_row;
+        self.cur_row += 1;
+        if cur_row % 2 == 0 {
             let prev_argmin = self.state;
-            let next_argmin = if i + 1 == self.n {
+            let next_argmin = if cur_row + 1 == self.n {
                 self.n - 1
             } else {
                 self.rec
@@ -90,13 +90,13 @@ impl ReduceRow {
             };
             self.state = next_argmin;
             (prev_argmin..=next_argmin)
-                .min_by_key(|&j| f(i, j))
+                .min_by_key(|&j| f(cur_row, j))
                 .unwrap()
         } else {
-            if f(i, self.state) <= f(i, i) {
+            if f(cur_row, self.state) <= f(cur_row, cur_row) {
                 self.state
             } else {
-                i
+                cur_row
             }
         }
     }
@@ -104,7 +104,7 @@ impl ReduceRow {
 
 struct ReduceCol {
     n: usize,
-    i: usize,
+    cur_row: usize,
     cols: Vec<usize>,
     rec: ReduceRow,
 }
@@ -113,7 +113,7 @@ impl ReduceCol {
     fn new(n: usize) -> Self {
         Self {
             n,
-            i: 0,
+            cur_row: 0,
             cols: vec![],
             rec: ReduceRow::new(n),
         }
@@ -123,16 +123,16 @@ impl ReduceCol {
     where
         T: Ord,
     {
-        let i = self.i;
-        self.i += 1;
-        for j in if i == 0 {
+        let cur_row = self.cur_row;
+        self.cur_row += 1;
+        for j in if cur_row == 0 {
             vec![0]
         } else {
-            vec![2 * i - 1, 2 * i]
+            vec![2 * cur_row - 1, 2 * cur_row]
         } {
             while {
                 let len = self.cols.len();
-                len != i && f(len - 1, *self.cols.last().unwrap()) > f(len - 1, j)
+                len != cur_row && f(len - 1, *self.cols.last().unwrap()) > f(len - 1, j)
             } {
                 self.cols.pop();
             }
@@ -141,7 +141,7 @@ impl ReduceCol {
             }
         }
         let cols = &self.cols;
-        self.rec.get_argmin(|i, j| f(i, cols[j]))
+        cols[self.rec.get_argmin(|i, j| f(i, cols[j]))]
     }
 }
 
