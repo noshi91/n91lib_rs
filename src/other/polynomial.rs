@@ -96,6 +96,16 @@ where
     }
 }
 
+impl<T> Mul<T> for Polynomial<T>
+where
+    T: Semiring + Clone,
+{
+    type Output = Self;
+    fn mul(self, rhs: T) -> Self {
+        self.into_iter().map(|s| s * rhs.clone()).collect()
+    }
+}
+
 impl<T> Neg for Polynomial<T>
 where
     T: Group,

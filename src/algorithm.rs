@@ -15,6 +15,7 @@ pub mod permutation_tree;
 pub mod polynomial_matrix_prod;
 pub mod pow;
 pub mod quick_select;
+pub mod schoenhage_strassen;
 pub mod shortest_even_length_cycle;
 pub mod smawk;
 pub mod subset_convolution;
