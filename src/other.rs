@@ -20,7 +20,7 @@ pub mod polynomial;
 pub mod pow;
 pub mod queue;
 pub mod rand;
-pub mod rec_lambda;
+pub mod recurse;
 pub mod suspension;
 
 pub use cmp_by_key::CmpByKey;

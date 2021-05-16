@@ -1,5 +1,15 @@
+/*
+
+Reference
+
+[1] Cantor, D. G., & Kaltofen, E. (1987).
+    Fast multiplication of polynomials over arbitrary rings. Acta Inf, 28.
+
+*/
+
 use crate::other::algebraic::Ring;
 use crate::other::itertools::zip;
+use crate::other::Polynomial;
 
 use std::fmt::Debug;
 
@@ -23,173 +33,157 @@ where
         .collect()
 }
 
-pub fn schoenhage_strassen_2fold<R>(a: &[R], b: &[R]) -> (u32, Vec<R>)
-where
-    R: Ring + Clone + Debug,
-{
-    if a.is_empty() || b.is_empty() {
-        return (0, vec![]);
-    }
-    let m = a.len() + b.len() - 1;
-    let k = m.next_power_of_two().trailing_zeros();
-    let n = 2usize.pow(k);
-    let a = resized(a, n, R::zero());
-    let b = resized(b, n, R::zero());
-    let mut c = vec![R::zero(); n];
-    schoenhage_strassen_2fold_sub(k, &a, &b, &mut c);
-    fn calc_exp(mut k: u32) -> u32 {
-        let mut ret: u32 = 0;
-        while k > 2 {
-            let l = (k + 1) / 2;
-            ret += l;
-            k = k - l + 1;
-        }
-        ret
-    }
-    c.truncate(m);
-    (calc_exp(k), c)
-}
+pub use ss_2fold::schoenhage_strassen_2fold;
 
-fn schoenhage_strassen_2fold_sub<R>(k: u32, a: &[R], b: &[R], c: &mut [R])
-where
-    R: Ring + Clone + Debug,
-{
-    let n = 2usize.pow(k);
+mod ss_2fold {
+    use super::*;
 
-    if k <= 2 {
-        for (i, a) in a.iter().enumerate() {
-            for (j, b) in b.iter().cloned().enumerate() {
-                let t = i + j;
-                if t < n {
-                    c[t] += a.clone() * b;
-                } else {
-                    c[t - n] -= a.clone() * b;
-                }
-            }
-        }
-        return;
-    }
-
-    let l = (k + 1) / 2;
-    let lp = 2usize.pow(l);
-    let m = k - l;
-    let mp = 2usize.pow(m);
-
-    let fft = |a: &mut [R]| {
-        let mut temp = vec![R::zero(); 2 * mp];
-        for w in (0..l).rev().map(|x| 2usize.pow(x)) {
-            let root: usize = (4 * mp) / (2 * w);
-            for a in a.chunks_exact_mut(2 * w * 2 * mp) {
-                let mut s: usize = 0;
-                let (x, y) = a.split_at_mut(w * 2 * mp);
-                for (x, y) in zip(x.chunks_exact_mut(2 * mp), y.chunks_exact_mut(2 * mp)) {
-                    temp.clone_from_slice(x);
-                    for (x, y) in zip(x, &*y) {
-                        *x += y.clone();
-                    }
-                    for (t, y) in zip(&mut temp, &mut *y) {
-                        *t = t.clone() - y.clone();
-                    }
-                    y[s..].clone_from_slice(&temp[..2 * mp - s]);
-                    for (y, t) in zip(y, &temp[2 * mp - s..]) {
-                        *y = -t.clone();
-                    }
-                    s += root;
-                }
-            }
-        }
-    };
-
-    let ifft = |a: &mut [R]| {
-        let mut temp = vec![R::zero(); 2 * mp];
-        for w in (0..l).map(|x| 2usize.pow(x)) {
-            let root: usize = (4 * mp) / (2 * w);
-            for a in a.chunks_exact_mut(2 * w * 2 * mp) {
-                let mut s: usize = 0;
-                let (x, y) = a.split_at_mut(w * 2 * mp);
-                for (x, y) in zip(x.chunks_exact_mut(2 * mp), y.chunks_exact_mut(2 * mp)) {
-                    temp[0..2 * mp - s].clone_from_slice(&y[s..]);
-                    for (t, y) in zip(&mut temp[2 * mp - s..], &*y) {
-                        *t = -y.clone();
-                    }
-                    y.clone_from_slice(x);
-                    for (x, t) in zip(x, &temp) {
-                        *x += t.clone();
-                    }
-                    for (y, t) in zip(y, &temp) {
-                        *y -= t.clone();
-                    }
-                    s += root;
-                }
-            }
-        }
-    };
-
-    let extend_and_fft = |a: &[R]| -> Vec<R> {
-        let mut ah = vec![R::zero(); 2 * n];
-        for (a, ah) in zip(a.chunks_exact(mp), ah.chunks_exact_mut(2 * mp)) {
-            ah[0..mp].clone_from_slice(a);
-        }
-        let weight = 2 * mp / lp;
-        for (s, ah) in ah.chunks_exact_mut(2 * mp).enumerate() {
-            ah.rotate_right(weight * s);
-            for ah in &mut ah[0..weight * s] {
-                *ah = -ah.clone();
-            }
-        }
-        fft(&mut ah);
-        ah
-    };
-
-    let ah = extend_and_fft(a);
-    let bh = extend_and_fft(b);
-    let mut ch = vec![R::zero(); 2 * n];
-    for (c, (a, b)) in zip(
-        ch.chunks_exact_mut(2 * mp),
-        zip(ah.chunks_exact(2 * mp), bh.chunks_exact(2 * mp)),
-    ) {
-        schoenhage_strassen_2fold_sub(m + 1, a, b, c);
-    }
-    ifft(&mut ch);
+    pub fn schoenhage_strassen_2fold<R>(a: &[R], b: &[R]) -> (u32, Vec<R>)
+    where
+        R: Ring + Clone + Debug,
     {
-        let weight = 2 * mp / lp;
-        for (s, ch) in ch.chunks_exact_mut(2 * mp).enumerate() {
-            for ch in &mut ch[0..weight * s] {
-                *ch = -ch.clone();
-            }
-            ch.rotate_left(weight * s);
+        if a.is_empty() || b.is_empty() {
+            return (0, vec![]);
         }
+        let m = a.len() + b.len() - 1;
+        let k = m.next_power_of_two().trailing_zeros();
+        let n = 2usize.pow(k);
+        let a = resized(a, n);
+        let b = resized(b, n);
+        let mut c = schoenhage_strassen_2fold_sub(k, a, b).coef;
+        fn calc_exp(mut k: u32) -> u32 {
+            let mut ret: u32 = 0;
+            while k > 2 {
+                let l = (k + 1) / 2;
+                ret += l;
+                k = k - l + 1;
+            }
+            ret
+        }
+        c.truncate(m);
+        (calc_exp(k), c)
     }
-    for i in 0..lp {
-        for j in 0..mp {
-            c[mp * i + j] += ch[2 * mp * i + j].clone();
+
+    fn schoenhage_strassen_2fold_sub<R>(k: u32, a: Polynomial<R>, b: Polynomial<R>) -> Polynomial<R>
+    where
+        R: Ring + Clone + Debug,
+    {
+        let n = 2usize.pow(k);
+
+        if k <= 2 {
+            return negcyc(a * b, n);
         }
-        if i + 1 == lp {
-            for j in mp..2 * mp {
-                c[j - mp] -= ch[2 * mp * i + j].clone();
+
+        let l = (k + 1) / 2;
+        let lp = 2usize.pow(l);
+        let m = k - l;
+        let mp = 2usize.pow(m);
+
+        let fft = |a: &mut [Polynomial<R>]| {
+            for w in (0..l).rev().map(|x| 2usize.pow(x)) {
+                let root: usize = (4 * mp) / (2 * w);
+                for a in a.chunks_exact_mut(2 * w) {
+                    let (x, y) = a.split_at_mut(w);
+                    for (p, (x, y)) in zip(x, y).enumerate() {
+                        let nx = x.clone() + y.clone();
+                        let ny = negcyc((x.clone() - y.clone()) << (p * root), 2 * mp);
+                        *x = nx;
+                        *y = ny;
+                    }
+                }
             }
-        } else {
-            for j in mp..2 * mp {
-                c[mp * i + j] += ch[2 * mp * i + j].clone();
+        };
+
+        let ifft = |a: &mut [Polynomial<R>]| {
+            for w in (0..l).map(|x| 2usize.pow(x)) {
+                let root: usize = (4 * mp) / (2 * w);
+                for a in a.chunks_exact_mut(2 * w) {
+                    let (x, y) = a.split_at_mut(w);
+                    for (p, (x, y)) in zip(x, y).enumerate() {
+                        let py = shr(y.clone(), p * root);
+                        let nx = x.clone() + py.clone();
+                        *y = x.clone() - py;
+                        *x = nx;
+                    }
+                }
+            }
+        };
+
+        let weight = 2 * mp / lp;
+
+        let extend_and_fft = |a: &[R]| -> Vec<Polynomial<R>> {
+            let mut ah: Vec<Polynomial<R>> = a
+                .chunks_exact(mp)
+                .enumerate()
+                .map(|(i, a)| negcyc(resized(a, 2 * mp) << (i * weight), 2 * mp))
+                .collect();
+            fft(&mut ah);
+            ah
+        };
+
+        let ah = extend_and_fft(&a.coef);
+        let bh = extend_and_fft(&b.coef);
+        let mut ch: Vec<Polynomial<R>> = zip(ah, bh)
+            .map(|(a, b)| schoenhage_strassen_2fold_sub(m + 1, a, b))
+            .collect();
+        ifft(&mut ch);
+        for (i, c) in ch.iter_mut().enumerate() {
+            *c = shr(c.clone(), i * weight);
+        }
+        let mut c = vec![R::zero(); n];
+        for (i, mut ch) in ch.into_iter().enumerate() {
+            if i + 1 == lp {
+                let w = ch.coef.split_off(mp);
+                for (c, ch) in zip(&mut c[mp * i..], ch) {
+                    *c += ch;
+                }
+                for (c, w) in zip(&mut c, w) {
+                    *c -= w;
+                }
+            } else {
+                for (c, ch) in zip(&mut c[mp * i..mp * (i + 2)], ch) {
+                    *c += ch;
+                }
             }
         }
+        c.into()
+    }
+
+    fn shr<R>(mut p: Polynomial<R>, n: usize) -> Polynomial<R>
+    where
+        R: Ring + Debug,
+    {
+        let mut w = p.coef.split_off(n);
+        w.extend((-p).coef);
+        w.into()
+    }
+
+    fn negcyc<R>(mut p: Polynomial<R>, n: usize) -> Polynomial<R>
+    where
+        R: Ring,
+    {
+        let w = p.coef.split_off(n);
+        for (c, w) in zip(&mut p, w) {
+            *c -= w;
+        }
+        p
     }
 }
 
-pub fn schoenhage_strassen_3fold<R>(a: &[R], b: &[R]) -> (u32, Vec<R>)
+pub fn schoenhage_strassen_3fold<R>(_a: &[R], _b: &[R]) -> (u32, Vec<R>)
 where
     R: Ring,
 {
     unimplemented!()
 }
 
-fn resized<T>(a: &[T], n: usize, x: T) -> Vec<T>
+fn resized<R>(a: &[R], n: usize) -> Polynomial<R>
 where
-    T: Clone,
+    R: Ring + Clone,
 {
     a.iter()
         .cloned()
-        .chain(std::iter::once(x).cycle())
+        .chain(std::iter::once(R::zero()).cycle())
         .take(n)
         .collect()
 }

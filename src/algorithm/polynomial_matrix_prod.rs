@@ -86,22 +86,22 @@ pub fn polynomial_matrix_prod(a: &Matrix<Polynomial<Fp>>, m: u64) -> Matrix<Fp> 
         ret
     };
 
-    use crate::other::rec_lambda::{MyFn, RecLambda};
+    use crate::other::recurse::recurse;
 
-    let eval_s = |eval_s: &dyn MyFn<u64, Vec<Matrix<Fp>>>, w: u64| -> Vec<Matrix<Fp>> {
+    let eval_s = recurse::<u64, Vec<Matrix<Fp>>, _>(|eval_s, w: u64| -> Vec<Matrix<Fp>> {
         if w == 0 {
             return vec![Matrix::identity(n)];
         }
 
         if w % 2 == 1 {
-            let mut s = eval_s.call(w - 1);
+            let mut s = eval_s(w - 1);
             for (i, s) in s.iter_mut().enumerate() {
                 *s = s.clone() * get(b * i as u64 + (w - 1));
             }
             s.extend((d * (w - 1) + 1..d * w + 1).map(|i| naive(b * i..b * i + w)));
             s
         } else {
-            let mut s = eval_s.call(w / 2);
+            let mut s = eval_s(w / 2);
             let x = interpolate(&s, b * (d * (w / 2) + 1), (d * (w / 2)) as usize);
             let y = interpolate(&s, w / 2, (d * w) as usize + 1);
             s.extend(x);
@@ -110,9 +110,9 @@ pub fn polynomial_matrix_prod(a: &Matrix<Polynomial<Fp>>, m: u64) -> Matrix<Fp> 
             }
             s
         }
-    };
+    });
 
-    let s = RecLambda::new(eval_s).call(b);
+    let s = eval_s(b);
     s.into_iter().fold(Matrix::identity(n), |b, a| b * a) * naive((d * b + 1) * b..m)
 }
 
